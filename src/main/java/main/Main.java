@@ -1,13 +1,16 @@
 package main;
 
 import lombok.extern.slf4j.Slf4j;
+import main.domain.Brand;
+import main.domain.Category;
+import main.domain.Product;
+import main.domain.ProductInfo;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.openqa.selenium.WebDriver;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -25,49 +28,63 @@ public class Main {
             Thread.sleep(2000);
 
             // 카테고리 URL 스크래핑 진행
-            List<String> categoryUrlList = CategoryScraping.scraping(driver);
+            List<Category> categoryList = CategoryScraping.scraping(driver);
 
-            List<String> brandUrlList = new ArrayList<>();
+            List<Brand> brandList = new ArrayList<>();
 
-            for (String categoryUrl : categoryUrlList) {
-//            for (String categoryUrl : categoryUrlList.subList(0, 1)) {
-                ScrapingUtil.openNewTab(driver, categoryUrl);
+//            for (Category category : categoryList) {
+            for (Category category : categoryList) {
+                ScrapingUtil.openNewTab(driver, category.getUrl());
                 String tab1 = new ArrayList<>(driver.getWindowHandles()).get(NumberUtils.INTEGER_ZERO);
                 String tab2 = new ArrayList<>(driver.getWindowHandles()).get(NumberUtils.INTEGER_ONE);
                 driver.switchTo().window(tab2).navigate();
-                brandUrlList.addAll(BrandScraping.scraping(driver));
+
+                List<Brand> brands = BrandScraping.scraping(driver);
+                brands.forEach(brand -> brand.setCategoryName(category.getName()));
+
+                brandList.addAll(brands);
                 driver.close();
                 driver.switchTo().window(tab1).navigate();
             }
 
-            brandUrlList = brandUrlList.stream().distinct().collect(Collectors.toList());
+            brandList = brandList.stream().distinct().collect(Collectors.toList());
 
-            List<String> productUrlList = new ArrayList<>();
+            List<Product> productList = new ArrayList<>();
 
-            for (String brandUrl : brandUrlList) {
-//            for (String brandUrl : brandUrlList.subList(13, 14)) {
-                ScrapingUtil.openNewTab(driver, brandUrl);
+//            for (Brand brand : brandList) {
+            for (Brand brand : brandList) {
+                ScrapingUtil.openNewTab(driver, brand.getUrl());
                 String tab1 = new ArrayList<>(driver.getWindowHandles()).get(NumberUtils.INTEGER_ZERO);
                 String tab2 = new ArrayList<>(driver.getWindowHandles()).get(NumberUtils.INTEGER_ONE);
                 driver.switchTo().window(tab2).navigate();
-                productUrlList.addAll(ProductScraping.scraping(driver));
+
+                List<Product> products = ProductScraping.scraping(driver);
+                products.forEach(product -> product.setCategoryName(brand.getCategoryName()));
+
+                productList.addAll(products);
                 driver.close();
                 driver.switchTo().window(tab1).navigate();
             }
 
-            List<Map<String, String>> productInfoList = new ArrayList<>();
+            List<ProductInfo> productInfoList = new ArrayList<>();
 
-            for (String productUrl : productUrlList) {
-                ScrapingUtil.openNewTab(driver, productUrl);
+            for (Product product : productList) {
+                ScrapingUtil.openNewTab(driver, product.getUrl());
                 String tab1 = new ArrayList<>(driver.getWindowHandles()).get(NumberUtils.INTEGER_ZERO);
                 String tab2 = new ArrayList<>(driver.getWindowHandles()).get(NumberUtils.INTEGER_ONE);
                 driver.switchTo().window(tab2).navigate();
-                productInfoList.add(ProductInfoExtractScraping.scraping(driver));
+
+                ProductInfo productInfo = ProductInfoExtractScraping.scraping(driver);
+                productInfo.setCategoryName(product.getCategoryName());
+
+                productInfoList.add(productInfo);
                 driver.close();
                 driver.switchTo().window(tab1).navigate();
             }
 
-            Excel.create(productInfoList);
+            for (Category category : categoryList) {
+                Excel.create(productInfoList.stream().filter(productInfo -> productInfo.getCategoryName().equals(category.getName())).collect(Collectors.toList()), category.getName().replaceAll("/", "_"));
+            }
         } catch (Exception exception) {
             log.error(ExceptionUtils.getStackTrace(exception));
         } finally {

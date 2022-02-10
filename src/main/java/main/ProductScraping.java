@@ -1,5 +1,6 @@
 package main;
 
+import main.domain.Product;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -12,10 +13,12 @@ import java.util.stream.Collectors;
 public class ProductScraping {
     private static final String PRODUCT_URL = "https://gift.kakao.com/product/";
 
-    public static List<String> scraping(WebDriver driver) throws InterruptedException {
+    public static List<Product> scraping(WebDriver driver) throws InterruptedException {
         boolean isEvent = Boolean.TRUE;
 
-        String eventXPath = "/html/body/app-root/app-view-wrapper/div/div/main/article/app-pw-detail/gl-promotion/div/gl-product-group[2]/div/div/div/ul/li";
+        int glProductGroupSize = driver.findElements(By.tagName("gl-product-group")).size();
+
+        String eventXPath = "/html/body/app-root/app-view-wrapper/div/div/main/article/app-pw-detail/gl-promotion/div/gl-product-group[" + glProductGroupSize + "]/div/div/div/ul/li";
         String xPath = "/html/body/app-root/app-view-wrapper/div/div/main/article/app-pw-detail/gl-promotion/div/gl-product-group/div/div/div/ul/li";
 
         int eventMinLiSize = driver.findElements(By.xpath(eventXPath)).size();
@@ -52,6 +55,12 @@ public class ProductScraping {
             webElementList = driver.findElements(By.xpath(xPath));
         }
 
-        return webElementList.stream().map(webElement -> PRODUCT_URL + webElement.getAttribute("data-tiara-id")).collect(Collectors.toList());
+        return webElementList
+                .stream()
+                .map(webElement ->
+                        Product.builder()
+                                .url(PRODUCT_URL + webElement.getAttribute("data-tiara-id"))
+                                .build())
+                .collect(Collectors.toList());
     }
 }
