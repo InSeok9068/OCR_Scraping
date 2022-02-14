@@ -1,4 +1,4 @@
-package main;
+package kr.co.kpcard.scraping.common;
 
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;

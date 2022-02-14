@@ -1,4 +1,4 @@
-package main.domain;
+package kr.co.kpcard.scraping.kakao.domain;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Builder
-public class ProductInfo {
+public class KakaoProductInfo {
     private final String brand;
     private final String title;
     private final String price;

@@ -1,6 +1,6 @@
-package main;
+package kr.co.kpcard.scraping.kakao;
 
-import main.domain.ProductInfo;
+import kr.co.kpcard.scraping.kakao.domain.KakaoProductInfo;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -10,8 +10,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 
-public class Excel {
-    public static void create(List<ProductInfo> productInfoList, String fileName) throws IOException {
+public class KakaoExcel {
+    public static void create(List<KakaoProductInfo> kakaoProductInfoList, String fileName) throws IOException {
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("OCR 상품 정보");
 
@@ -24,17 +24,17 @@ public class Excel {
         headerRow.createCell(5).setCellValue("설명");
         headerRow.createCell(6).setCellValue("이미지 파일명");
 
-        for (int i = 1; i <= productInfoList.size(); i++) {
+        for (int i = 1; i <= kakaoProductInfoList.size(); i++) {
             Row row = sheet.createRow(i);
-            ProductInfo productInfo = productInfoList.get(i - 1);
+            KakaoProductInfo kakaoProductInfo = kakaoProductInfoList.get(i - 1);
             int cellIndex = 0;
-            row.createCell(cellIndex++).setCellValue(productInfo.getBrand());
-            row.createCell(cellIndex++).setCellValue(productInfo.getCategoryName());
-            row.createCell(cellIndex++).setCellValue(productInfo.getCouponType());
-            row.createCell(cellIndex++).setCellValue(productInfo.getTitle());
-            row.createCell(cellIndex++).setCellValue(productInfo.getPrice());
-            row.createCell(cellIndex++).setCellValue(productInfo.getContent());
-            row.createCell(cellIndex).setCellValue(productInfo.getImageFileName());
+            row.createCell(cellIndex++).setCellValue(kakaoProductInfo.getBrand());
+            row.createCell(cellIndex++).setCellValue(kakaoProductInfo.getCategoryName());
+            row.createCell(cellIndex++).setCellValue(kakaoProductInfo.getCouponType());
+            row.createCell(cellIndex++).setCellValue(kakaoProductInfo.getTitle());
+            row.createCell(cellIndex++).setCellValue(kakaoProductInfo.getPrice());
+            row.createCell(cellIndex++).setCellValue(kakaoProductInfo.getContent());
+            row.createCell(cellIndex).setCellValue(kakaoProductInfo.getImageFileName());
         }
 
         FileOutputStream fos = new FileOutputStream("C:\\excel\\" + fileName + ".xlsx");

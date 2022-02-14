@@ -1,7 +1,8 @@
-package main;
+package kr.co.kpcard.scraping.kakao;
 
+import kr.co.kpcard.scraping.common.ScrapingUtil;
 import lombok.extern.slf4j.Slf4j;
-import main.domain.ProductInfo;
+import kr.co.kpcard.scraping.kakao.domain.KakaoProductInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.openqa.selenium.By;
@@ -14,8 +15,8 @@ import java.io.IOException;
 import java.net.URL;
 
 @Slf4j
-public class ProductInfoExtractScraping {
-    public static ProductInfo scraping(WebDriver driver) throws IOException {
+public class KakaoProductInfoExtractScraping {
+    public static KakaoProductInfo scraping(WebDriver driver) throws IOException {
         String title = StringUtils.EMPTY;
         String brand = StringUtils.EMPTY;
         String price = StringUtils.EMPTY;
@@ -72,7 +73,7 @@ public class ProductInfoExtractScraping {
             ImageIO.write(img, ext, new File(saveImagePath));
         }
 
-        return ProductInfo.builder()
+        return KakaoProductInfo.builder()
                 .brand(brand)
                 .title(title)
                 .price(price)

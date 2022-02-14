@@ -1,6 +1,6 @@
-package main;
+package kr.co.kpcard.scraping.kakao;
 
-import main.domain.Product;
+import kr.co.kpcard.scraping.kakao.domain.KakaoProduct;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -10,10 +10,10 @@ import org.openqa.selenium.WebElement;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ProductScraping {
+public class KakaoProductScraping {
     private static final String PRODUCT_URL = "https://gift.kakao.com/product/";
 
-    public static List<Product> scraping(WebDriver driver) throws InterruptedException {
+    public static List<KakaoProduct> scraping(WebDriver driver) throws InterruptedException {
         boolean isEvent = Boolean.TRUE;
 
         int glProductGroupSize = driver.findElements(By.tagName("gl-product-group")).size();
@@ -58,7 +58,7 @@ public class ProductScraping {
         return webElementList
                 .stream()
                 .map(webElement ->
-                        Product.builder()
+                        KakaoProduct.builder()
                                 .url(PRODUCT_URL + webElement.getAttribute("data-tiara-id"))
                                 .build())
                 .collect(Collectors.toList());
