@@ -1,8 +1,8 @@
 package kr.co.kpcard.scraping.kakao;
 
 import kr.co.kpcard.scraping.common.ScrapingUtil;
-import lombok.extern.slf4j.Slf4j;
 import kr.co.kpcard.scraping.kakao.domain.KakaoProductInfo;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.openqa.selenium.By;

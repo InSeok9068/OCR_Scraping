@@ -1,4 +1,4 @@
-package kr.co.kpcard.scraping.gifticon;
+package kr.co.kpcard.scraping.giftishow;
 
 import kr.co.kpcard.scraping.common.ChromDriverStart;
 import kr.co.kpcard.scraping.common.ScrapingUtil;
@@ -12,19 +12,19 @@ import java.util.List;
 import java.util.Map;
 
 @Slf4j
-public class GifticonScrapingMain {
+public class GiftiShowScrapingMain {
     public static void main(String[] args) {
         final WebDriver driver = ChromDriverStart.createWebDriver(false);
 
         // 크롤링 시작
         try {
             // 초기 페이지 로딩
-            driver.get("https://www.gifticon.com/shopping/shopping_brandshop.do");
+            driver.get("https://www.giftishow.com/brand/brandList.mhows");
 
             // 초기 페이지 로딩 시간 2초 정도 딜레이
             Thread.sleep(2000);
 
-            List<String> brandUrlList = GifticonBrandScraping.scraping(driver);
+            List<String> brandUrlList = GiftiShowBrandScraping.scraping(driver);
 
             List<String> productUrlList = new ArrayList<>();
 
@@ -34,7 +34,7 @@ public class GifticonScrapingMain {
                 String tab2 = new ArrayList<>(driver.getWindowHandles()).get(NumberUtils.INTEGER_ONE);
                 driver.switchTo().window(tab2).navigate();
 
-                productUrlList.addAll(GifticonProductScraping.scraping(driver));
+                productUrlList.addAll(GiftiShowProductScraping.scraping(driver));
 
                 driver.close();
                 driver.switchTo().window(tab1).navigate();
@@ -48,13 +48,13 @@ public class GifticonScrapingMain {
                 String tab2 = new ArrayList<>(driver.getWindowHandles()).get(NumberUtils.INTEGER_ONE);
                 driver.switchTo().window(tab2).navigate();
 
-                productInfoList.add(GifticonProductInfoExtractScraping.scraping(driver));
+                productInfoList.add(GiftiShowProductInfoExtractScraping.scraping(driver));
 
                 driver.close();
                 driver.switchTo().window(tab1).navigate();
             }
 
-            GifticonExcel.create(productInfoList, "Gifticon 상품정보");
+            GiftiShowExcel.create(productInfoList, "GiftiShow 상품정보");
         } catch (Exception exception) {
             log.error(ExceptionUtils.getStackTrace(exception));
         } finally {
