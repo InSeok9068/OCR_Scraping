@@ -1,6 +1,7 @@
 package kr.co.kpcard.scraping.giftishow;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
@@ -15,8 +16,8 @@ public class GiftiShowProductScraping {
 
         List<WebElement> webElementList = driver.findElements(By.xpath("/html/body/div[1]/form[2]/div/div[3]/span/a"));
 
-        for (int i = 0; i < webElementList.size(); i++) {
-            webElementList.get(i).click();
+        for (int i = 1; i <= webElementList.size(); i++) {
+            ((JavascriptExecutor) driver).executeScript("goPageNo('no')".replace("no", String.valueOf(i)));
             Thread.sleep(1000);
 
             List<WebElement> webElementProductList = driver.findElements(By.xpath("/html/body/div[1]/form[2]/div/div[2]/div[2]/ul/li/a"));
