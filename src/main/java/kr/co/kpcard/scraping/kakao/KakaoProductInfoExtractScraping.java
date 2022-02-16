@@ -62,7 +62,8 @@ public class KakaoProductInfoExtractScraping {
 
             URL url = new URL(imageSrc);
 
-            String ext = imageSrc.substring(imageSrc.lastIndexOf('.') + 1);  // 이미지 확장자 추출
+//            String ext = imageSrc.substring(imageSrc.lastIndexOf('.') + 1);  // 이미지 확장자 추출
+            String ext = "jpg";  // 이미지 확장자 추출 하드코딩 (확장자가 없는 케이스도 존재해서 강제로 하드코딩 진행)
 
             BufferedImage img = ImageIO.read(url);
 
