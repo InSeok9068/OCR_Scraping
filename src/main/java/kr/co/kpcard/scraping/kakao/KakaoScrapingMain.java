@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 public class KakaoScrapingMain {
     public static void main(String[] args) {
 
-        final WebDriver driver = ChromDriverStart.createWebDriver(false);
+        final WebDriver driver = ChromDriverStart.createWebDriver(true);
 
         // 크롤링 시작
         try {

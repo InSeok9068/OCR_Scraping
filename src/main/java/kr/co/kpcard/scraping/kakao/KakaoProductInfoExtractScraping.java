@@ -3,6 +3,7 @@ package kr.co.kpcard.scraping.kakao;
 import kr.co.kpcard.scraping.common.ScrapingUtil;
 import kr.co.kpcard.scraping.kakao.domain.KakaoProductInfo;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.openqa.selenium.By;
@@ -58,20 +59,27 @@ public class KakaoProductInfoExtractScraping {
 
         String outputFilePath = "C:\\excel\\image\\";
 
-        if (!StringUtils.isEmpty(imageSrc)) {
+        try {
+            if (!StringUtils.isEmpty(imageSrc)) {
 
-            URL url = new URL(imageSrc);
+                URL url = new URL(imageSrc);
 
-//            String ext = imageSrc.substring(imageSrc.lastIndexOf('.') + 1);  // 이미지 확장자 추출
-            String ext = "jpg";  // 이미지 확장자 추출 하드코딩 (확장자가 없는 케이스도 존재해서 강제로 하드코딩 진행)
+                String ext = FilenameUtils.getExtension(imageSrc); // 이미지 확장자 추출
 
-            BufferedImage img = ImageIO.read(url);
+                if (StringUtils.isEmpty(ext)) {
+                    ext = "jpg";
+                }
 
-            fileName = (ScrapingUtil.FILE_NAME_INDEX++) + "." + ext;
+                BufferedImage img = ImageIO.read(url);
 
-            String saveImagePath = outputFilePath + fileName;
+                fileName = (ScrapingUtil.FILE_NAME_INDEX++) + "." + ext;
 
-            ImageIO.write(img, ext, new File(saveImagePath));
+                String saveImagePath = outputFilePath + fileName;
+
+                ImageIO.write(img, ext, new File(saveImagePath));
+            }
+        } catch (Exception exception) {
+            log.error("이미지 쓰기 에러 : {}", ExceptionUtils.getStackTrace(exception));
         }
 
         return KakaoProductInfo.builder()

@@ -14,7 +14,7 @@ import java.io.IOException;
 public class ChromDriverStart {
 
     public static WebDriver createWebDriver(boolean isHide) {
-        final File driverFile = new File("C:\\Users\\kpcard\\Desktop\\크롤링\\chromedriver.exe");
+        final File driverFile = new File("C:\\chromedriver\\chromedriver.exe");
 
         final ChromeDriverService chromeDriverService = new ChromeDriverService.Builder()
                 .usingDriverExecutable(driverFile)
