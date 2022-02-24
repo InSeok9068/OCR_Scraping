@@ -15,6 +15,7 @@ public class GifticonProductInfoExtractScraping {
     public static Map<String, String> scraping(WebDriver driver) throws IOException {
         String title = StringUtils.EMPTY;
         String brand = StringUtils.EMPTY;
+        String price = StringUtils.EMPTY;
 
         try {
             title = driver.findElement(By.className("pdt_name")).getText();
@@ -29,9 +30,16 @@ public class GifticonProductInfoExtractScraping {
             log.error(ExceptionUtils.getStackTrace(exception));
         }
 
+        try {
+            price = driver.findElement(By.className("cost")).getText();
+        } catch (Exception exception) {
+            log.error(ExceptionUtils.getStackTrace(exception));
+        }
+
         return ImmutableMap.<String, String>builder()
                 .put("title", title)
                 .put("brand", brand)
+                .put("price", price)
                 .build();
     }
 }

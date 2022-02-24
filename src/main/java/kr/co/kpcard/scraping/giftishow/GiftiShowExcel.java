@@ -18,13 +18,15 @@ public class GiftiShowExcel {
         Row headerRow = sheet.createRow(0);
         headerRow.createCell(0).setCellValue("브랜드");
         headerRow.createCell(1).setCellValue("상품명");
+        headerRow.createCell(2).setCellValue("가격");
 
         for (int i = 1; i <= productInfoList.size(); i++) {
             Row row = sheet.createRow(i);
             Map<String, String> productInfo = productInfoList.get(i - 1);
             int cellIndex = 0;
             row.createCell(cellIndex++).setCellValue(productInfo.get("brand"));
-            row.createCell(cellIndex).setCellValue(productInfo.get("title"));
+            row.createCell(cellIndex++).setCellValue(productInfo.get("title"));
+            row.createCell(cellIndex).setCellValue(productInfo.get("price"));
         }
 
         FileOutputStream fos = new FileOutputStream("C:\\excel\\" + fileName + ".xlsx");

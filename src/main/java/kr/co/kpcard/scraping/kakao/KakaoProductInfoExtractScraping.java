@@ -66,7 +66,7 @@ public class KakaoProductInfoExtractScraping {
 
                 String ext = FilenameUtils.getExtension(imageSrc); // 이미지 확장자 추출
 
-                if (StringUtils.isEmpty(ext)) {
+                if (StringUtils.isEmpty(ext) || ext.contains("net")) {
                     ext = "jpg";
                 }
 
