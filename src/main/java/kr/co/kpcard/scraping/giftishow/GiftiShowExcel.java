@@ -19,6 +19,7 @@ public class GiftiShowExcel {
         headerRow.createCell(0).setCellValue("브랜드");
         headerRow.createCell(1).setCellValue("상품명");
         headerRow.createCell(2).setCellValue("가격");
+        headerRow.createCell(3).setCellValue("이미지 파일명");
 
         for (int i = 1; i <= productInfoList.size(); i++) {
             Row row = sheet.createRow(i);
@@ -26,7 +27,8 @@ public class GiftiShowExcel {
             int cellIndex = 0;
             row.createCell(cellIndex++).setCellValue(productInfo.get("brand"));
             row.createCell(cellIndex++).setCellValue(productInfo.get("title"));
-            row.createCell(cellIndex).setCellValue(productInfo.get("price"));
+            row.createCell(cellIndex++).setCellValue(productInfo.get("price"));
+            row.createCell(cellIndex).setCellValue(productInfo.get("imageFileName"));
         }
 
         FileOutputStream fos = new FileOutputStream("C:\\excel\\" + fileName + ".xlsx");
