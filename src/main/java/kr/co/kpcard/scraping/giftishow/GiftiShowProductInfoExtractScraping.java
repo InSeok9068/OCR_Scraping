@@ -41,7 +41,18 @@ public class GiftiShowProductInfoExtractScraping {
             }
             brand = brand.substring(brand.indexOf(":") + 2);
         } catch (Exception exception) {
-            log.error(ExceptionUtils.getStackTrace(exception));
+            try {
+                int pTagSize = driver.findElements(By.xpath("/html/body/div[4]/div/div[1]/div[1]/div/div[2]/div[1]/p")).size();
+
+                if (pTagSize == 4) {
+                    brand = driver.findElement(By.xpath("/html/body/div[4]/div/div[1]/div[1]/div/div[2]/div[1]/p[3]")).getText();
+                } else {
+                    brand = driver.findElement(By.xpath("/html/body/div[4]/div/div[1]/div[1]/div/div[2]/div[1]/p[2]")).getText();
+                }
+                brand = brand.substring(brand.indexOf(":") + 2);
+            } catch (Exception exception1) {
+                log.error(ExceptionUtils.getStackTrace(exception));
+            }
         }
 
         try {
@@ -53,7 +64,11 @@ public class GiftiShowProductInfoExtractScraping {
         try {
             imageSrc = driver.findElement(By.xpath("/html/body/div[3]/div/div[1]/div[1]/div/div[1]/img")).getAttribute("src");
         } catch (Exception exception) {
-            log.error(ExceptionUtils.getStackTrace(exception));
+            try {
+                imageSrc = driver.findElement(By.xpath("/html/body/div[4]/div/div[1]/div[1]/div/div[1]/img")).getAttribute("src");
+            } catch (Exception exception1) {
+                log.error(ExceptionUtils.getStackTrace(exception));
+            }
         }
 
         String outputFilePath = "C:\\excel\\image\\";
