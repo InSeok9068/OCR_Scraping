@@ -2,6 +2,7 @@ package kr.co.kpcard.scraping.giftishow;
 
 import com.google.common.collect.ImmutableMap;
 import kr.co.kpcard.scraping.common.ScrapingUtil;
+import kr.co.kpcard.scraping.common.Util;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -86,7 +87,7 @@ public class GiftiShowProductInfoExtractScraping {
 
                 BufferedImage img = ImageIO.read(url);
 
-                fileName = "giftiShow_" + (ScrapingUtil.FILE_NAME_INDEX++) + "." + ext;
+                fileName = "giftiShow_" + Util.getUniqueFileName() + "." + ext;
 
                 String saveImagePath = outputFilePath + fileName;
 

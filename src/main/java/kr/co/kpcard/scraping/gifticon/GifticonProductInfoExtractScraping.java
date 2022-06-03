@@ -2,6 +2,7 @@ package kr.co.kpcard.scraping.gifticon;
 
 import com.google.common.collect.ImmutableMap;
 import kr.co.kpcard.scraping.common.ScrapingUtil;
+import kr.co.kpcard.scraping.common.Util;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -65,7 +66,7 @@ public class GifticonProductInfoExtractScraping {
 
                 BufferedImage img = ImageIO.read(url);
 
-                fileName = "gifticon_" + (ScrapingUtil.FILE_NAME_INDEX++) + "." + ext;
+                fileName = "gifticon_" + Util.getUniqueFileName() + "." + ext;
 
                 String saveImagePath = outputFilePath + fileName;
 

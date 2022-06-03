@@ -1,6 +1,6 @@
 package kr.co.kpcard.scraping.kakao;
 
-import kr.co.kpcard.scraping.common.ScrapingUtil;
+import kr.co.kpcard.scraping.common.Util;
 import kr.co.kpcard.scraping.kakao.domain.KakaoProductInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
@@ -72,7 +72,7 @@ public class KakaoProductInfoExtractScraping {
 
                 BufferedImage img = ImageIO.read(url);
 
-                fileName = (ScrapingUtil.FILE_NAME_INDEX++) + "." + ext;
+                fileName = "kako_" + Util.getUniqueFileName() + "." + ext;
 
                 String saveImagePath = outputFilePath + fileName;
 

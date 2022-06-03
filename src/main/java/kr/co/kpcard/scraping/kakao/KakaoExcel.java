@@ -16,22 +16,26 @@ public class KakaoExcel {
         Sheet sheet = workbook.createSheet("OCR 상품 정보");
 
         Row headerRow = sheet.createRow(0);
-        headerRow.createCell(0).setCellValue("브랜드");
-        headerRow.createCell(1).setCellValue("카테고리");
-        headerRow.createCell(2).setCellValue("쿠폰타입");
-        headerRow.createCell(3).setCellValue("상품명");
-        headerRow.createCell(4).setCellValue("가격");
-        headerRow.createCell(5).setCellValue("설명");
-        headerRow.createCell(6).setCellValue("이미지 파일명");
+        headerRow.createCell(0).setCellValue("발급사");
+        headerRow.createCell(1).setCellValue("상품명");
+        headerRow.createCell(2).setCellValue("브랜드");
+        headerRow.createCell(3).setCellValue("연관브랜드");
+        headerRow.createCell(4).setCellValue("카테고리");
+        headerRow.createCell(5).setCellValue("쿠폰타입");
+        headerRow.createCell(6).setCellValue("가격");
+        headerRow.createCell(7).setCellValue("설명");
+        headerRow.createCell(8).setCellValue("이미지 파일명");
 
         for (int i = 1; i <= kakaoProductInfoList.size(); i++) {
             Row row = sheet.createRow(i);
             KakaoProductInfo kakaoProductInfo = kakaoProductInfoList.get(i - 1);
             int cellIndex = 0;
+            row.createCell(cellIndex++).setCellValue("카카오");
+            row.createCell(cellIndex++).setCellValue(kakaoProductInfo.getTitle());
+            row.createCell(cellIndex++).setCellValue(kakaoProductInfo.getBrand());
             row.createCell(cellIndex++).setCellValue(kakaoProductInfo.getBrand());
             row.createCell(cellIndex++).setCellValue(kakaoProductInfo.getCategoryName());
             row.createCell(cellIndex++).setCellValue(kakaoProductInfo.getCouponType());
-            row.createCell(cellIndex++).setCellValue(kakaoProductInfo.getTitle());
             row.createCell(cellIndex++).setCellValue(kakaoProductInfo.getPrice());
             row.createCell(cellIndex++).setCellValue(kakaoProductInfo.getContent());
             row.createCell(cellIndex).setCellValue(kakaoProductInfo.getImageFileName());
