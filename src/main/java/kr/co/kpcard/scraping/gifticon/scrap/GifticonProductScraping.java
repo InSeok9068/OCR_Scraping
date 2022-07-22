@@ -1,4 +1,4 @@
-package kr.co.kpcard.scraping.gifticon;
+package kr.co.kpcard.scraping.gifticon.scrap;
 
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
@@ -10,11 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class GifticonProductScraping {
-
     public static List<String> scraping(WebDriver driver) throws InterruptedException {
-//        String href = driver.findElement(By.className("last")).getAttribute("href");
-//        int lastPageNo = Integer.parseInt(href.substring(href.indexOf("(") + 2, href.indexOf("(") + 3));
-
         List<String> productList = new ArrayList<>();
 
         List<WebElement> webElementList = driver.findElements(By.xpath("/html/body/div[1]/div[2]/div[2]/div/div[7]/div[2]/a"));

@@ -1,4 +1,4 @@
-package kr.co.kpcard.scraping.gifticon;
+package kr.co.kpcard.scraping.gifticon.scrap;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;

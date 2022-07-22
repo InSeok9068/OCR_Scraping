@@ -1,7 +1,7 @@
-package kr.co.kpcard.scraping.kakao;
+package kr.co.kpcard.scraping.gifticon.scrap;
 
-import kr.co.kpcard.scraping.common.Util;
-import kr.co.kpcard.scraping.kakao.domain.KakaoProductInfo;
+import kr.co.kpcard.scraping.common.domain.ScrapProductInfo;
+import kr.co.kpcard.scraping.common.util.ScrapUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -16,43 +16,35 @@ import java.io.IOException;
 import java.net.URL;
 
 @Slf4j
-public class KakaoProductInfoExtractScraping {
-    public static KakaoProductInfo scraping(WebDriver driver) throws IOException {
+public class GifticonProductInfoExtractScraping {
+    public static ScrapProductInfo scraping(WebDriver driver) throws IOException {
         String title = StringUtils.EMPTY;
         String brand = StringUtils.EMPTY;
         String price = StringUtils.EMPTY;
-        String content = StringUtils.EMPTY;
-        String couponType = StringUtils.EMPTY;
         String imageSrc = StringUtils.EMPTY;
         String fileName = StringUtils.EMPTY;
 
         try {
-            title = driver.findElement(By.className("tit_subject")).getText();
+            title = driver.findElement(By.className("pdt_name")).getText();
         } catch (Exception exception) {
             log.error(ExceptionUtils.getStackTrace(exception));
         }
+
         try {
-            brand = driver.findElement(By.xpath("/html/body/app-root/app-view-wrapper/div/div/main/article/app-home/div/app-ct-main/div/div/div[2]/div/div[4]/gl-link")).getAttribute("data-tiara-copy");
+            brand = driver.findElement(By.className("shopna")).getText();
+            brand = brand.substring(0, brand.indexOf("매장교환") - 1);
         } catch (Exception exception) {
             log.error(ExceptionUtils.getStackTrace(exception));
         }
+
         try {
-            price = driver.findElement(By.className("txt_total")).getText();
+            price = driver.findElement(By.className("cost")).getText();
         } catch (Exception exception) {
             log.error(ExceptionUtils.getStackTrace(exception));
         }
+
         try {
-            content = driver.findElement(By.className("desc_explain")).getText();
-        } catch (Exception exception) {
-            log.error(ExceptionUtils.getStackTrace(exception));
-        }
-        try {
-            couponType = (title.contains("원권")) ? "금액권" : "교환권";
-        } catch (Exception exception) {
-            log.error(ExceptionUtils.getStackTrace(exception));
-        }
-        try {
-            imageSrc = driver.findElement(By.xpath("/html/body/app-root/app-view-wrapper/div/div/main/article/app-home/div/app-ct-main/div/div/div[1]/div/cu-carousel/div/div/div/div/img")).getAttribute("src");
+            imageSrc = driver.findElement(By.xpath("/html/body/div[1]/div[2]/div[2]/div/div[2]/div[1]/div/span/img")).getAttribute("src");
         } catch (Exception exception) {
             log.error(ExceptionUtils.getStackTrace(exception));
         }
@@ -72,7 +64,7 @@ public class KakaoProductInfoExtractScraping {
 
                 BufferedImage img = ImageIO.read(url);
 
-                fileName = "kako_" + Util.getUniqueFileName() + "." + ext;
+                fileName = "gifticon_" + ScrapUtil.getUniqueFileName() + "." + ext;
 
                 String saveImagePath = outputFilePath + fileName;
 
@@ -82,13 +74,16 @@ public class KakaoProductInfoExtractScraping {
             log.error("이미지 쓰기 에러 : {}", ExceptionUtils.getStackTrace(exception));
         }
 
-        return KakaoProductInfo.builder()
-                .brand(brand)
+        return ScrapProductInfo.builder()
+                .issuer("기프티콘")
                 .title(title)
+                .brand(brand)
+                .subBrand(brand)
+                .category(StringUtils.EMPTY)
+                .couponType(StringUtils.EMPTY)
                 .price(price)
-                .content(content)
-                .couponType(couponType)
-                .imageFileName(fileName)
+                .content(StringUtils.EMPTY)
+                .image(fileName)
                 .build();
     }
 }

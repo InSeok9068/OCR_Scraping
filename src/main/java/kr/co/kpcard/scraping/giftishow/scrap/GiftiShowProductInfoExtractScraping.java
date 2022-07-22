@@ -1,8 +1,7 @@
-package kr.co.kpcard.scraping.giftishow;
+package kr.co.kpcard.scraping.giftishow.scrap;
 
-import com.google.common.collect.ImmutableMap;
-import kr.co.kpcard.scraping.common.ScrapingUtil;
-import kr.co.kpcard.scraping.common.Util;
+import kr.co.kpcard.scraping.common.domain.ScrapProductInfo;
+import kr.co.kpcard.scraping.common.util.ScrapUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -15,11 +14,10 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Map;
 
 @Slf4j
 public class GiftiShowProductInfoExtractScraping {
-    public static Map<String, String> scraping(WebDriver driver) throws IOException {
+    public static ScrapProductInfo scraping(WebDriver driver) throws IOException {
         String title = StringUtils.EMPTY;
         String brand = StringUtils.EMPTY;
         String price = StringUtils.EMPTY;
@@ -87,7 +85,7 @@ public class GiftiShowProductInfoExtractScraping {
 
                 BufferedImage img = ImageIO.read(url);
 
-                fileName = "giftiShow_" + Util.getUniqueFileName() + "." + ext;
+                fileName = "giftiShow_" + ScrapUtil.getUniqueFileName() + "." + ext;
 
                 String saveImagePath = outputFilePath + fileName;
 
@@ -97,11 +95,16 @@ public class GiftiShowProductInfoExtractScraping {
             log.error("이미지 쓰기 에러 : {}", ExceptionUtils.getStackTrace(exception));
         }
 
-        return ImmutableMap.<String, String>builder()
-                .put("title", title)
-                .put("brand", brand)
-                .put("price", price)
-                .put("imageFileName", fileName)
+        return ScrapProductInfo.builder()
+                .issuer("기프티쇼")
+                .title(title)
+                .brand(brand)
+                .subBrand(brand)
+                .category(StringUtils.EMPTY)
+                .couponType(StringUtils.EMPTY)
+                .price(price)
+                .content(StringUtils.EMPTY)
+                .image(fileName)
                 .build();
     }
 }

@@ -1,4 +1,4 @@
-package kr.co.kpcard.scraping.kakao;
+package kr.co.kpcard.scraping.kakao.scrap;
 
 import kr.co.kpcard.scraping.kakao.domain.KakaoProduct;
 import org.apache.commons.lang3.math.NumberUtils;
