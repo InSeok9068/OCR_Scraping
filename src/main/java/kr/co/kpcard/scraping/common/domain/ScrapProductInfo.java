@@ -1,22 +1,43 @@
 package kr.co.kpcard.scraping.common.domain;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+@Entity
 @Getter
-@Builder
+@Setter
 @ToString
+@NoArgsConstructor
 public class ScrapProductInfo {
-    private final String issuer;
-    private final String title;
-    private final String brand;
-    private final String subBrand;
-    @Setter
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long seqNo;
+    private String issuer;
+    private String title;
+    private String brand;
+    private String subBrand;
     private String category;
-    private final String couponType;
-    private final String price;
-    private final String content;
-    private final String image;
+    private String couponType;
+    private String price;
+    private String content;
+    private String image;
+
+    @Builder
+    public ScrapProductInfo(Long seqNo, String issuer, String title, String brand, String subBrand, String category, String couponType, String price, String content, String image) {
+        this.seqNo = seqNo;
+        this.issuer = issuer;
+        this.title = title;
+        this.brand = brand;
+        this.subBrand = subBrand;
+        this.category = category;
+        this.couponType = couponType;
+        this.price = price;
+        this.content = content;
+        this.image = image;
+    }
 }
