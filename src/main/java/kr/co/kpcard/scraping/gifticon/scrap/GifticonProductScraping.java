@@ -4,13 +4,15 @@ import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Component
 public class GifticonProductScraping {
-    public static List<String> scraping(WebDriver driver) throws InterruptedException {
+    public List<String> scraping(WebDriver driver) throws InterruptedException {
         List<String> productList = new ArrayList<>();
 
         List<WebElement> webElementList = driver.findElements(By.xpath("/html/body/div[1]/div[2]/div[2]/div/div[7]/div[2]/a"));

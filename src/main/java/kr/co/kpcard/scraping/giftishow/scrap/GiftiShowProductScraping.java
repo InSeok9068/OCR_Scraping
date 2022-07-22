@@ -4,14 +4,16 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class GiftiShowProductScraping {
     private static final String PRODUCT_URL = "https://www.giftishow.com/brand/brandGoodsDetail.mhows?goods_seq=%s&brand_no=%s";
 
-    public static List<String> scraping(WebDriver driver) throws InterruptedException {
+    public List<String> scraping(WebDriver driver) throws InterruptedException {
         List<String> productList = new ArrayList<>();
 
         List<WebElement> webElementList = driver.findElements(By.xpath("/html/body/div[1]/form[2]/div/div[3]/span/a"));

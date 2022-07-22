@@ -1,8 +1,8 @@
 package kr.co.kpcard.scraping.giftishow.service;
 
 import kr.co.kpcard.scraping.common.domain.ScrapProductInfo;
-import kr.co.kpcard.scraping.common.util.ExcelUtil;
-import kr.co.kpcard.scraping.common.util.ScrapUtil;
+import kr.co.kpcard.scraping.common.excel.ExcelService;
+import kr.co.kpcard.scraping.common.util.ScrapUtilService;
 import kr.co.kpcard.scraping.giftishow.scrap.GiftiShowBrandScraping;
 import kr.co.kpcard.scraping.giftishow.scrap.GiftiShowProductInfoExtractScraping;
 import kr.co.kpcard.scraping.giftishow.scrap.GiftiShowProductScraping;
@@ -22,6 +22,10 @@ import java.util.List;
 public class GiftiShowService {
 
     private final WebDriver driver;
+    private final ExcelService excelService;
+    private final GiftiShowBrandScraping giftiShowBrandScraping;
+    private final GiftiShowProductScraping giftiShowProductScraping;
+    private final GiftiShowProductInfoExtractScraping giftiShowProductInfoExtractScraping;
 
     public void scrap() {
         // 크롤링 시작
@@ -32,17 +36,17 @@ public class GiftiShowService {
             // 초기 페이지 로딩 시간 2초 정도 딜레이
             Thread.sleep(2000);
 
-            List<String> brandUrlList = GiftiShowBrandScraping.scraping(driver);
+            List<String> brandUrlList = giftiShowBrandScraping.scraping(driver);
 
             List<String> productUrlList = new ArrayList<>();
 
             for (String brandUrl : brandUrlList) {
-                ScrapUtil.openNewTab(driver, brandUrl);
+                ScrapUtilService.openNewTab(driver, brandUrl);
                 String tab1 = new ArrayList<>(driver.getWindowHandles()).get(NumberUtils.INTEGER_ZERO);
                 String tab2 = new ArrayList<>(driver.getWindowHandles()).get(NumberUtils.INTEGER_ONE);
                 driver.switchTo().window(tab2).navigate();
 
-                productUrlList.addAll(GiftiShowProductScraping.scraping(driver));
+                productUrlList.addAll(giftiShowProductScraping.scraping(driver));
 
                 driver.close();
                 driver.switchTo().window(tab1).navigate();
@@ -51,18 +55,18 @@ public class GiftiShowService {
             List<ScrapProductInfo> scrapProductInfoList = new ArrayList<>();
 
             for (String productUrl : productUrlList) {
-                ScrapUtil.openNewTab(driver, productUrl);
+                ScrapUtilService.openNewTab(driver, productUrl);
                 String tab1 = new ArrayList<>(driver.getWindowHandles()).get(NumberUtils.INTEGER_ZERO);
                 String tab2 = new ArrayList<>(driver.getWindowHandles()).get(NumberUtils.INTEGER_ONE);
                 driver.switchTo().window(tab2).navigate();
 
-                scrapProductInfoList.add(GiftiShowProductInfoExtractScraping.scraping(driver));
+                scrapProductInfoList.add(giftiShowProductInfoExtractScraping.scraping(driver));
 
                 driver.close();
                 driver.switchTo().window(tab1).navigate();
             }
 
-            ExcelUtil.create(scrapProductInfoList, "GiftiShow 상품정보");
+            excelService.create(scrapProductInfoList, "GiftiShow 상품정보");
         } catch (Exception exception) {
             log.error(ExceptionUtils.getStackTrace(exception));
         } finally {

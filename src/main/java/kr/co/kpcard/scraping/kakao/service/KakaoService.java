@@ -1,8 +1,8 @@
 package kr.co.kpcard.scraping.kakao.service;
 
 import kr.co.kpcard.scraping.common.domain.ScrapProductInfo;
-import kr.co.kpcard.scraping.common.util.ExcelUtil;
-import kr.co.kpcard.scraping.common.util.ScrapUtil;
+import kr.co.kpcard.scraping.common.excel.ExcelService;
+import kr.co.kpcard.scraping.common.util.ScrapUtilService;
 import kr.co.kpcard.scraping.kakao.domain.KakaoBrand;
 import kr.co.kpcard.scraping.kakao.domain.KakaoCategory;
 import kr.co.kpcard.scraping.kakao.domain.KakaoProduct;
@@ -27,6 +27,11 @@ import java.util.stream.Collectors;
 public class KakaoService {
 
     private final WebDriver driver;
+    private final ExcelService excelService;
+    private final KakaoCategoryScraping kakaoCategoryScraping;
+    private final KakaoBrandScraping kakaoBrandScraping;
+    private final KakaoProductScraping kakaoProductScraping;
+    private final KakaoProductInfoExtractScraping kakaoProductInfoExtractScraping;
 
     public void scrap() {
         // 크롤링 시작
@@ -38,17 +43,17 @@ public class KakaoService {
             Thread.sleep(2000);
 
             // 카테고리 URL 스크래핑 진행
-            List<KakaoCategory> kakaoCategoryList = KakaoCategoryScraping.scraping(driver);
+            List<KakaoCategory> kakaoCategoryList = kakaoCategoryScraping.scraping(driver);
 
             List<KakaoBrand> kakaoBrandList = new ArrayList<>();
 
             for (KakaoCategory kakaoCategory : kakaoCategoryList) {
-                ScrapUtil.openNewTab(driver, kakaoCategory.getUrl());
+                ScrapUtilService.openNewTab(driver, kakaoCategory.getUrl());
                 String tab1 = new ArrayList<>(driver.getWindowHandles()).get(NumberUtils.INTEGER_ZERO);
                 String tab2 = new ArrayList<>(driver.getWindowHandles()).get(NumberUtils.INTEGER_ONE);
                 driver.switchTo().window(tab2).navigate();
 
-                List<KakaoBrand> kakaoBrands = KakaoBrandScraping.scraping(driver);
+                List<KakaoBrand> kakaoBrands = kakaoBrandScraping.scraping(driver);
                 kakaoBrands.forEach(kakaoBrand -> kakaoBrand.setCategoryName(kakaoCategory.getName()));
 
                 kakaoBrandList.addAll(kakaoBrands);
@@ -61,12 +66,12 @@ public class KakaoService {
             List<KakaoProduct> kakaoProductList = new ArrayList<>();
 
             for (KakaoBrand kakaoBrand : kakaoBrandList) {
-                ScrapUtil.openNewTab(driver, kakaoBrand.getUrl());
+                ScrapUtilService.openNewTab(driver, kakaoBrand.getUrl());
                 String tab1 = new ArrayList<>(driver.getWindowHandles()).get(NumberUtils.INTEGER_ZERO);
                 String tab2 = new ArrayList<>(driver.getWindowHandles()).get(NumberUtils.INTEGER_ONE);
                 driver.switchTo().window(tab2).navigate();
 
-                List<KakaoProduct> kakaoProducts = KakaoProductScraping.scraping(driver);
+                List<KakaoProduct> kakaoProducts = kakaoProductScraping.scraping(driver);
                 kakaoProducts.forEach(kakaoProduct -> kakaoProduct.setCategoryName(kakaoBrand.getCategoryName()));
 
                 kakaoProductList.addAll(kakaoProducts);
@@ -77,12 +82,12 @@ public class KakaoService {
             List<ScrapProductInfo> scrapProductInfoList = new ArrayList<>();
 
             for (KakaoProduct kakaoProduct : kakaoProductList) {
-                ScrapUtil.openNewTab(driver, kakaoProduct.getUrl());
+                ScrapUtilService.openNewTab(driver, kakaoProduct.getUrl());
                 String tab1 = new ArrayList<>(driver.getWindowHandles()).get(NumberUtils.INTEGER_ZERO);
                 String tab2 = new ArrayList<>(driver.getWindowHandles()).get(NumberUtils.INTEGER_ONE);
                 driver.switchTo().window(tab2).navigate();
 
-                ScrapProductInfo scrapProductInfo = KakaoProductInfoExtractScraping.scraping(driver);
+                ScrapProductInfo scrapProductInfo = kakaoProductInfoExtractScraping.scraping(driver);
                 scrapProductInfo.setCategory(kakaoProduct.getCategoryName());
 
                 scrapProductInfoList.add(scrapProductInfo);
@@ -91,7 +96,7 @@ public class KakaoService {
             }
 
             for (KakaoCategory kakaoCategory : kakaoCategoryList) {
-                ExcelUtil.create(scrapProductInfoList.stream().filter(kakaoProductInfo -> kakaoProductInfo.getCategory().equals(kakaoCategory.getName())).collect(Collectors.toList()), kakaoCategory.getName().replaceAll("/", "_"));
+                excelService.create(scrapProductInfoList.stream().filter(kakaoProductInfo -> kakaoProductInfo.getCategory().equals(kakaoCategory.getName())).collect(Collectors.toList()), kakaoCategory.getName().replaceAll("/", "_"));
             }
         } catch (Exception exception) {
             log.error(ExceptionUtils.getStackTrace(exception));

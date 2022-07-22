@@ -3,14 +3,16 @@ package kr.co.kpcard.scraping.giftishow.scrap;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Component
 public class GiftiShowBrandScraping {
     private static final String BRAND_URL = "https://www.giftishow.com/brand/brandGoodsList.mhows?brand_no=%s";
 
-    public static List<String> scraping(WebDriver driver) {
+    public List<String> scraping(WebDriver driver) {
         List<WebElement> webElementList = driver.findElements(By.xpath("/html/body/div[1]/div[2]/div[2]/div[2]/div/ul/li/a"));
 
         return webElementList

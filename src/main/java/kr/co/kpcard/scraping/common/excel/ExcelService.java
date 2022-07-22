@@ -1,17 +1,25 @@
-package kr.co.kpcard.scraping.common.util;
+package kr.co.kpcard.scraping.common.excel;
 
 import kr.co.kpcard.scraping.common.domain.ScrapProductInfo;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 
-public class ExcelUtil {
-    public static void create(List<ScrapProductInfo> scrapProductInfoList, String fileName) throws IOException {
+
+@Component
+public class ExcelService {
+
+    @Value("${savePath.excel}")
+    private String excelSavePath;
+
+    public void create(List<ScrapProductInfo> scrapProductInfoList, String fileName) throws IOException {
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("OCR 상품 정보");
 
@@ -41,7 +49,7 @@ public class ExcelUtil {
             row.createCell(cellIndex).setCellValue(scrapProductInfo.getImage());
         }
 
-        FileOutputStream fos = new FileOutputStream("C:\\excel\\" + fileName + ".xlsx");
+        FileOutputStream fos = new FileOutputStream(excelSavePath + fileName + ".xlsx");
         workbook.write(fos);
         workbook.close();
     }

@@ -1,2 +1,6 @@
 chrome:
   hide: false
+
+savePath:
+  excel: C:\excel\
+  image: C:\excel\image\

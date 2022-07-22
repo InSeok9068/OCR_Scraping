@@ -1,8 +1,8 @@
 package kr.co.kpcard.scraping.gifticon.service;
 
 import kr.co.kpcard.scraping.common.domain.ScrapProductInfo;
-import kr.co.kpcard.scraping.common.util.ExcelUtil;
-import kr.co.kpcard.scraping.common.util.ScrapUtil;
+import kr.co.kpcard.scraping.common.excel.ExcelService;
+import kr.co.kpcard.scraping.common.util.ScrapUtilService;
 import kr.co.kpcard.scraping.gifticon.scrap.GifticonBrandScraping;
 import kr.co.kpcard.scraping.gifticon.scrap.GifticonProductInfoExtractScraping;
 import kr.co.kpcard.scraping.gifticon.scrap.GifticonProductScraping;
@@ -22,6 +22,10 @@ import java.util.List;
 public class GifticonService {
 
     private final WebDriver driver;
+    private final ExcelService excelService;
+    private final GifticonBrandScraping gifticonBrandScraping;
+    private final GifticonProductScraping gifticonProductScraping;
+    private final GifticonProductInfoExtractScraping gifticonProductInfoExtractScraping;
 
     public void scrap() {
         // 크롤링 시작
@@ -32,17 +36,17 @@ public class GifticonService {
             // 초기 페이지 로딩 시간 2초 정도 딜레이
             Thread.sleep(2000);
 
-            List<String> brandUrlList = GifticonBrandScraping.scraping(driver);
+            List<String> brandUrlList = gifticonBrandScraping.scraping(driver);
 
             List<String> productUrlList = new ArrayList<>();
 
             for (String brandUrl : brandUrlList) {
-                ScrapUtil.openNewTab(driver, brandUrl);
+                ScrapUtilService.openNewTab(driver, brandUrl);
                 String tab1 = new ArrayList<>(driver.getWindowHandles()).get(NumberUtils.INTEGER_ZERO);
                 String tab2 = new ArrayList<>(driver.getWindowHandles()).get(NumberUtils.INTEGER_ONE);
                 driver.switchTo().window(tab2).navigate();
 
-                productUrlList.addAll(GifticonProductScraping.scraping(driver));
+                productUrlList.addAll(gifticonProductScraping.scraping(driver));
 
                 driver.close();
                 driver.switchTo().window(tab1).navigate();
@@ -51,18 +55,18 @@ public class GifticonService {
             List<ScrapProductInfo> scrapProductInfoList = new ArrayList<>();
 
             for (String productUrl : productUrlList) {
-                ScrapUtil.openNewTab(driver, productUrl);
+                ScrapUtilService.openNewTab(driver, productUrl);
                 String tab1 = new ArrayList<>(driver.getWindowHandles()).get(NumberUtils.INTEGER_ZERO);
                 String tab2 = new ArrayList<>(driver.getWindowHandles()).get(NumberUtils.INTEGER_ONE);
                 driver.switchTo().window(tab2).navigate();
 
-                scrapProductInfoList.add(GifticonProductInfoExtractScraping.scraping(driver));
+                scrapProductInfoList.add(gifticonProductInfoExtractScraping.scraping(driver));
 
                 driver.close();
                 driver.switchTo().window(tab1).navigate();
             }
 
-            ExcelUtil.create(scrapProductInfoList, "Gifticon 상품정보");
+            excelService.create(scrapProductInfoList, "Gifticon 상품정보");
         } catch (Exception exception) {
             log.error(ExceptionUtils.getStackTrace(exception));
         } finally {
