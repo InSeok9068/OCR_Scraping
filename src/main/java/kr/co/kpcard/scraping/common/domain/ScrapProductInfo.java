@@ -2,10 +2,7 @@ package kr.co.kpcard.scraping.common.domain;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @Getter
@@ -24,6 +21,8 @@ public class ScrapProductInfo {
     private String category;
     private String couponType;
     private String price;
+    @Lob
+    @Column
     private String content;
     private String image;
 

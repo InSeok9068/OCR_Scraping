@@ -44,12 +44,12 @@ public class KakaoProductInfoExtractScraping {
             log.error(ExceptionUtils.getStackTrace(exception));
         }
         try {
-            content = driver.findElement(By.className("desc_explain")).getText();
+            couponType = (title.contains("원권")) ? "금액권" : "교환권";
         } catch (Exception exception) {
             log.error(ExceptionUtils.getStackTrace(exception));
         }
         try {
-            couponType = (title.contains("원권")) ? "금액권" : "교환권";
+            content = driver.findElement(By.className("desc_explain")).getText();
         } catch (Exception exception) {
             log.error(ExceptionUtils.getStackTrace(exception));
         }

@@ -20,6 +20,10 @@ spring:
     init:
       mode: always
 
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
 chrome:
   hide: false
 

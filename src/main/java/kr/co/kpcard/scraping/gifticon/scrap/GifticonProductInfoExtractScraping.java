@@ -23,6 +23,8 @@ public class GifticonProductInfoExtractScraping {
         String title = StringUtils.EMPTY;
         String brand = StringUtils.EMPTY;
         String price = StringUtils.EMPTY;
+        String content = StringUtils.EMPTY;
+        String couponType = StringUtils.EMPTY;
         String imageSrc = StringUtils.EMPTY;
         String fileName;
 
@@ -46,6 +48,21 @@ public class GifticonProductInfoExtractScraping {
         }
 
         try {
+            couponType = (title.contains("원권")) ? "금액권" : "교환권";
+        } catch (Exception exception) {
+            log.error(ExceptionUtils.getStackTrace(exception));
+        }
+
+        try {
+            StringBuilder sb = new StringBuilder();
+            content = sb.append(driver.findElement(By.id("con1")).getText())
+                    .append(driver.findElement(By.id("con2")).getText())
+                    .toString();
+        } catch (Exception exception) {
+            log.error(ExceptionUtils.getStackTrace(exception));
+        }
+
+        try {
             imageSrc = driver.findElement(By.xpath("/html/body/div[1]/div[2]/div[2]/div/div[2]/div[1]/div/span/img")).getAttribute("src");
         } catch (Exception exception) {
             log.error(ExceptionUtils.getStackTrace(exception));
@@ -59,9 +76,9 @@ public class GifticonProductInfoExtractScraping {
                 .brand(brand)
                 .subBrand(brand)
                 .category(StringUtils.EMPTY)
-                .couponType(StringUtils.EMPTY)
+                .couponType(couponType)
                 .price(price)
-                .content(StringUtils.EMPTY)
+                .content(content)
                 .image(fileName)
                 .build();
     }

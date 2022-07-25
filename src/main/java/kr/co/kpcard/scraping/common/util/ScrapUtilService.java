@@ -29,10 +29,6 @@ public class ScrapUtilService {
         Thread.sleep(1000);
     }
 
-    public static String getUniqueFileName() {
-        return DateFormatUtils.format(new Date(), "yyyyMMddHHmmss") + RandomStringUtils.randomNumeric(5);
-    }
-
     public String saveImage(String imageSrc, String prefixFileName) {
         String fileName = StringUtils.EMPTY;
 
@@ -51,6 +47,7 @@ public class ScrapUtilService {
 
                 fileName = prefixFileName + getUniqueFileName() + "." + ext;
 
+//                String saveImagePath = imageSavePath + DateFormatUtils.format(new Date(), "yyyyMMdd") + '\\' + fileName;
                 String saveImagePath = imageSavePath + fileName;
 
                 ImageIO.write(img, ext, new File(saveImagePath));
@@ -60,6 +57,10 @@ public class ScrapUtilService {
         }
 
         return fileName;
+    }
+
+    private static String getUniqueFileName() {
+        return DateFormatUtils.format(new Date(), "yyyyMMddHHmmss") + RandomStringUtils.randomNumeric(5);
     }
 
 }

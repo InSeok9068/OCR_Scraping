@@ -4,18 +4,13 @@ import kr.co.kpcard.scraping.common.domain.ScrapProductInfo;
 import kr.co.kpcard.scraping.common.util.ScrapUtilService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.springframework.stereotype.Component;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 
 @Slf4j
 @Component
@@ -28,6 +23,8 @@ public class GiftiShowProductInfoExtractScraping {
         String title = StringUtils.EMPTY;
         String brand = StringUtils.EMPTY;
         String price = StringUtils.EMPTY;
+        String content = StringUtils.EMPTY;
+        String couponType = StringUtils.EMPTY;
         String imageSrc = StringUtils.EMPTY;
         String fileName;
 
@@ -68,6 +65,25 @@ public class GiftiShowProductInfoExtractScraping {
         }
 
         try {
+            couponType = (title.contains("원권")) ? "금액권" : "교환권";
+        } catch (Exception exception) {
+            log.error(ExceptionUtils.getStackTrace(exception));
+        }
+
+        try {
+            try {
+                StringBuilder sb = new StringBuilder();
+                content = sb.append(driver.findElement(By.className("txtCon")).getText())
+                        .append(driver.findElement(By.className("pnotandum")).getText())
+                        .toString();
+            } catch (Exception exception) {
+                log.error(ExceptionUtils.getStackTrace(exception));
+            }
+        } catch (Exception exception) {
+            log.error(ExceptionUtils.getStackTrace(exception));
+        }
+
+        try {
             imageSrc = driver.findElement(By.xpath("/html/body/div[3]/div/div[1]/div[1]/div/div[1]/img")).getAttribute("src");
         } catch (Exception exception) {
             try {
@@ -85,9 +101,9 @@ public class GiftiShowProductInfoExtractScraping {
                 .brand(brand)
                 .subBrand(brand)
                 .category(StringUtils.EMPTY)
-                .couponType(StringUtils.EMPTY)
+                .couponType(couponType)
                 .price(price)
-                .content(StringUtils.EMPTY)
+                .content(content)
                 .image(fileName)
                 .build();
     }
