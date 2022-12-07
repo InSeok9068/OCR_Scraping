@@ -1,6 +1,7 @@
 package kr.co.kpcard.scraping.giftishow.service;
 
 import kr.co.kpcard.scraping.common.domain.ScrapProductInfo;
+import kr.co.kpcard.scraping.common.excel.ExcelService;
 import kr.co.kpcard.scraping.common.repository.ScrapProductInfoRepository;
 import kr.co.kpcard.scraping.common.util.ScrapUtilService;
 import kr.co.kpcard.scraping.giftishow.scrap.GiftiShowBrandScraping;
@@ -26,6 +27,7 @@ public class GiftiShowService {
     private final GiftiShowBrandScraping giftiShowBrandScraping;
     private final GiftiShowProductScraping giftiShowProductScraping;
     private final GiftiShowProductInfoExtractScraping giftiShowProductInfoExtractScraping;
+    private final ExcelService excelService;
 
     public void scrap() {
         // 크롤링 시작
@@ -40,8 +42,8 @@ public class GiftiShowService {
 
             List<String> productUrlList = new ArrayList<>();
 
-//            for (String brandUrl : brandUrlList) {
-            for (String brandUrl : brandUrlList.subList(0, 1)) {
+            for (String brandUrl : brandUrlList) {
+//            for (String brandUrl : brandUrlList.subList(0, 1)) {
                 ScrapUtilService.openNewTab(driver, brandUrl);
                 String tab1 = new ArrayList<>(driver.getWindowHandles()).get(NumberUtils.INTEGER_ZERO);
                 String tab2 = new ArrayList<>(driver.getWindowHandles()).get(NumberUtils.INTEGER_ONE);
@@ -55,8 +57,8 @@ public class GiftiShowService {
 
             List<ScrapProductInfo> scrapProductInfoList = new ArrayList<>();
 
-//            for (String productUrl : productUrlList) {
-            for (String productUrl : productUrlList.subList(0, 1)) {
+            for (String productUrl : productUrlList) {
+//            for (String productUrl : productUrlList.subList(0, 1)) {
                 ScrapUtilService.openNewTab(driver, productUrl);
                 String tab1 = new ArrayList<>(driver.getWindowHandles()).get(NumberUtils.INTEGER_ZERO);
                 String tab2 = new ArrayList<>(driver.getWindowHandles()).get(NumberUtils.INTEGER_ONE);
@@ -68,7 +70,9 @@ public class GiftiShowService {
                 driver.switchTo().window(tab1).navigate();
             }
 
-            scrapProductInfoRepository.saveAll(scrapProductInfoList);
+//            scrapProductInfoRepository.saveAll(scrapProductInfoList);
+
+            excelService.create(scrapProductInfoList, "기프티쇼");
         } catch (Exception exception) {
             log.error(ExceptionUtils.getStackTrace(exception));
         }

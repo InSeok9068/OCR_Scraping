@@ -34,7 +34,7 @@ public class KakaoProductInfoExtractScraping {
             log.error(ExceptionUtils.getStackTrace(exception));
         }
         try {
-            brand = driver.findElement(By.xpath("/html/body/app-root/app-view-wrapper/div/div/main/article/app-home/div/app-ct-main/div/div/div[2]/div/div[4]/gl-link")).getAttribute("data-tiara-copy");
+            brand = driver.findElement(By.xpath("/html/body/app-root/app-view-wrapper/div/div/main/article/app-home/div/app-main/div/div/div[2]/div/div[4]/gl-link")).getAttribute("data-tiara-copy");
         } catch (Exception exception) {
             log.error(ExceptionUtils.getStackTrace(exception));
         }
@@ -54,7 +54,7 @@ public class KakaoProductInfoExtractScraping {
             log.error(ExceptionUtils.getStackTrace(exception));
         }
         try {
-            imageSrc = driver.findElement(By.xpath("/html/body/app-root/app-view-wrapper/div/div/main/article/app-home/div/app-ct-main/div/div/div[1]/div/cu-carousel/div/div/div/div/img")).getAttribute("src");
+            imageSrc = driver.findElement(By.xpath("/html/body/app-root/app-view-wrapper/div/div/main/article/app-home/div/app-main/div/div/div[1]/div/ngx-flicking/div/div/img")).getAttribute("src");
         } catch (Exception exception) {
             log.error(ExceptionUtils.getStackTrace(exception));
         }

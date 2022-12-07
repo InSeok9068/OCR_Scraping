@@ -1,6 +1,7 @@
 package kr.co.kpcard.scraping.kakao.service;
 
 import kr.co.kpcard.scraping.common.domain.ScrapProductInfo;
+import kr.co.kpcard.scraping.common.excel.ExcelService;
 import kr.co.kpcard.scraping.common.repository.ScrapProductInfoRepository;
 import kr.co.kpcard.scraping.common.util.ScrapUtilService;
 import kr.co.kpcard.scraping.kakao.domain.KakaoBrand;
@@ -32,6 +33,7 @@ public class KakaoService {
     private final KakaoBrandScraping kakaoBrandScraping;
     private final KakaoProductScraping kakaoProductScraping;
     private final KakaoProductInfoExtractScraping kakaoProductInfoExtractScraping;
+    private final ExcelService excelService;
 
     public void scrap() {
         // 크롤링 시작
@@ -47,8 +49,8 @@ public class KakaoService {
 
             List<KakaoBrand> kakaoBrandList = new ArrayList<>();
 
-//            for (KakaoCategory kakaoCategory : kakaoCategoryList) {
-            for (KakaoCategory kakaoCategory : kakaoCategoryList.subList(0, 1)) {
+            for (KakaoCategory kakaoCategory : kakaoCategoryList) {
+//            for (KakaoCategory kakaoCategory : kakaoCategoryList.subList(0, 1)) {
                 ScrapUtilService.openNewTab(driver, kakaoCategory.getUrl());
                 String tab1 = new ArrayList<>(driver.getWindowHandles()).get(NumberUtils.INTEGER_ZERO);
                 String tab2 = new ArrayList<>(driver.getWindowHandles()).get(NumberUtils.INTEGER_ONE);
@@ -66,8 +68,8 @@ public class KakaoService {
 
             List<KakaoProduct> kakaoProductList = new ArrayList<>();
 
-//            for (KakaoBrand kakaoBrand : kakaoBrandList) {
-            for (KakaoBrand kakaoBrand : kakaoBrandList.subList(0, 1)) {
+            for (KakaoBrand kakaoBrand : kakaoBrandList) {
+//            for (KakaoBrand kakaoBrand : kakaoBrandList.subList(0, 1)) {
                 ScrapUtilService.openNewTab(driver, kakaoBrand.getUrl());
                 String tab1 = new ArrayList<>(driver.getWindowHandles()).get(NumberUtils.INTEGER_ZERO);
                 String tab2 = new ArrayList<>(driver.getWindowHandles()).get(NumberUtils.INTEGER_ONE);
@@ -83,8 +85,8 @@ public class KakaoService {
 
             List<ScrapProductInfo> scrapProductInfoList = new ArrayList<>();
 
-//            for (KakaoProduct kakaoProduct : kakaoProductList) {
-            for (KakaoProduct kakaoProduct : kakaoProductList.subList(0, 1)) {
+            for (KakaoProduct kakaoProduct : kakaoProductList) {
+//            for (KakaoProduct kakaoProduct : kakaoProductList.subList(0, 1)) {
                 ScrapUtilService.openNewTab(driver, kakaoProduct.getUrl());
                 String tab1 = new ArrayList<>(driver.getWindowHandles()).get(NumberUtils.INTEGER_ZERO);
                 String tab2 = new ArrayList<>(driver.getWindowHandles()).get(NumberUtils.INTEGER_ONE);
@@ -98,7 +100,9 @@ public class KakaoService {
                 driver.switchTo().window(tab1).navigate();
             }
 
-            scrapProductInfoRepository.saveAll(scrapProductInfoList);
+//            scrapProductInfoRepository.saveAll(scrapProductInfoList);
+
+            excelService.create(scrapProductInfoList, "카카오");
         } catch (Exception exception) {
             log.error(ExceptionUtils.getStackTrace(exception));
         }
