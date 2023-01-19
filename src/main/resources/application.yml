@@ -24,7 +24,7 @@ spring:
     pathmatch:
       matching-strategy: ant_path_matcher
 
-chrome:
+browser:
   hide: false
 
 save-path:

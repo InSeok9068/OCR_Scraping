@@ -17,7 +17,7 @@ import java.io.IOException;
 @Component
 public class ChromDriverStart {
 
-    @Value("${chrome.hide}")
+    @Value("${browser.hide}")
     private boolean isHide;
 
     @Value("${chromedriver-path}")

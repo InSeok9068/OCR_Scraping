@@ -1,8 +1,11 @@
 package kr.co.kpcard.scraping.common.domain;
 
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -10,6 +13,7 @@ import javax.persistence.*;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 public class ScrapProductInfo {
 
     @Id
@@ -27,4 +31,7 @@ public class ScrapProductInfo {
     @Column
     private String content;
     private String image;
+
+    @CreatedDate
+    private LocalDateTime createdDate;
 }
