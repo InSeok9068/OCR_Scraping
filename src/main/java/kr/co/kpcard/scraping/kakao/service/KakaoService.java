@@ -1,5 +1,6 @@
 package kr.co.kpcard.scraping.kakao.service;
 
+import kr.co.kpcard.scraping.common.constant.IssuerEnum;
 import kr.co.kpcard.scraping.common.domain.ScrapProductInfo;
 import kr.co.kpcard.scraping.common.excel.ExcelService;
 import kr.co.kpcard.scraping.common.repository.ScrapProductInfoRepository;
@@ -39,7 +40,7 @@ public class KakaoService {
         // 크롤링 시작
         try {
             // 초기 페이지 로딩
-            driver.get("https://gift.kakao.com/brand/category/91/subcategory/146");
+            driver.get(IssuerEnum.KAKAO.getIssuerStartUrl());
 
             // 초기 페이지 로딩 시간 2초 정도 딜레이
             Thread.sleep(2000);
@@ -102,7 +103,7 @@ public class KakaoService {
 
 //            scrapProductInfoRepository.saveAll(scrapProductInfoList);
 
-            excelService.create(scrapProductInfoList, "카카오");
+            excelService.create(scrapProductInfoList, IssuerEnum.KAKAO.getIssuerDesc());
         } catch (Exception exception) {
             log.error(ExceptionUtils.getStackTrace(exception));
         }

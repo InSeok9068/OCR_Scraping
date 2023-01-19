@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 @Component
 public class KakaoBrandScraping {
     public List<KakaoBrand> scraping(WebDriver driver) {
-        List<WebElement> webElementList = driver.findElements(By.xpath("/html/body/app-root/app-view-wrapper/div/div/main/article/app-pw-home/article/div/div/app-brands/div/div/div[2]/div[1]/ngx-flicking/div/div[1]/div/div/gl-link/a"));
+        List<WebElement> webElementList = driver.findElements(By.xpath("/html/body/app-root/app-view-wrapper/div/div/main/article/app-pw-home/article/div/div/app-brands/div/div/div[2]/div[1]/ngx-flicking/div/div[1]/div/div/gc-link/a"));
 
         return webElementList
                 .stream()

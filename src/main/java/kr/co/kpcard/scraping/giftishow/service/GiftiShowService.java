@@ -1,5 +1,6 @@
 package kr.co.kpcard.scraping.giftishow.service;
 
+import kr.co.kpcard.scraping.common.constant.IssuerEnum;
 import kr.co.kpcard.scraping.common.domain.ScrapProductInfo;
 import kr.co.kpcard.scraping.common.excel.ExcelService;
 import kr.co.kpcard.scraping.common.repository.ScrapProductInfoRepository;
@@ -33,27 +34,29 @@ public class GiftiShowService {
         // 크롤링 시작
         try {
             // 초기 페이지 로딩
-            driver.get("https://www.giftishow.com/brand/brandList.mhows");
+            driver.get(IssuerEnum.GIFTISHOW.getIssuerStartUrl());
 
             // 초기 페이지 로딩 시간 2초 정도 딜레이
             Thread.sleep(2000);
 
-            List<String> brandUrlList = giftiShowBrandScraping.scraping(driver);
+//            List<String> brandUrlList = giftiShowBrandScraping.scraping(driver);
 
             List<String> productUrlList = new ArrayList<>();
 
-            for (String brandUrl : brandUrlList) {
+//            for (String brandUrl : brandUrlList) {
 //            for (String brandUrl : brandUrlList.subList(0, 1)) {
-                ScrapUtilService.openNewTab(driver, brandUrl);
-                String tab1 = new ArrayList<>(driver.getWindowHandles()).get(NumberUtils.INTEGER_ZERO);
-                String tab2 = new ArrayList<>(driver.getWindowHandles()).get(NumberUtils.INTEGER_ONE);
-                driver.switchTo().window(tab2).navigate();
+//                ScrapUtilService.openNewTab(driver, brandUrl);
+//                String tab1 = new ArrayList<>(driver.getWindowHandles()).get(NumberUtils.INTEGER_ZERO);
+//                String tab2 = new ArrayList<>(driver.getWindowHandles()).get(NumberUtils.INTEGER_ONE);
+//                driver.switchTo().window(tab2).navigate();
+//
+//                productUrlList.addAll(giftiShowProductScraping.scraping(driver));
+//
+//                driver.close();
+//                driver.switchTo().window(tab1).navigate();
+//            }
 
-                productUrlList.addAll(giftiShowProductScraping.scraping(driver));
-
-                driver.close();
-                driver.switchTo().window(tab1).navigate();
-            }
+            productUrlList.addAll(giftiShowProductScraping.scraping(driver));
 
             List<ScrapProductInfo> scrapProductInfoList = new ArrayList<>();
 
@@ -72,7 +75,7 @@ public class GiftiShowService {
 
 //            scrapProductInfoRepository.saveAll(scrapProductInfoList);
 
-            excelService.create(scrapProductInfoList, "기프티쇼");
+            excelService.create(scrapProductInfoList, IssuerEnum.GIFTISHOW.getIssuerDesc());
         } catch (Exception exception) {
             log.error(ExceptionUtils.getStackTrace(exception));
         }

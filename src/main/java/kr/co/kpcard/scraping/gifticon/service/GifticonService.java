@@ -1,5 +1,6 @@
 package kr.co.kpcard.scraping.gifticon.service;
 
+import kr.co.kpcard.scraping.common.constant.IssuerEnum;
 import kr.co.kpcard.scraping.common.domain.ScrapProductInfo;
 import kr.co.kpcard.scraping.common.excel.ExcelService;
 import kr.co.kpcard.scraping.common.repository.ScrapProductInfoRepository;
@@ -15,6 +16,7 @@ import org.openqa.selenium.WebDriver;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 @Slf4j
@@ -33,14 +35,14 @@ public class GifticonService {
         // 크롤링 시작
         try {
             // 초기 페이지 로딩
-            driver.get("https://www.gifticon.com/shopping/shopping_brandshop.do");
+            driver.get(IssuerEnum.GIFTICON.getIssuerStartUrl());
 
             // 초기 페이지 로딩 시간 2초 정도 딜레이
             Thread.sleep(2000);
 
             List<String> brandUrlList = gifticonBrandScraping.scraping(driver);
 
-            List<String> productUrlList = new ArrayList<>();
+            List<String> productUrlList = new LinkedList<>();
 
             for (String brandUrl : brandUrlList) {
 //            for (String brandUrl : brandUrlList.subList(0, 1)) {
@@ -55,7 +57,7 @@ public class GifticonService {
                 driver.switchTo().window(tab1).navigate();
             }
 
-            List<ScrapProductInfo> scrapProductInfoList = new ArrayList<>();
+            List<ScrapProductInfo> scrapProductInfoList = new LinkedList<>();
 
             for (String productUrl : productUrlList) {
 //            for (String productUrl : productUrlList.subList(0, 1)) {
@@ -72,7 +74,7 @@ public class GifticonService {
 
 //            scrapProductInfoRepository.saveAll(scrapProductInfoList);
 
-            excelService.create(scrapProductInfoList, "기프티콘");
+            excelService.create(scrapProductInfoList, IssuerEnum.GIFTICON.getIssuerDesc());
         } catch (Exception exception) {
             log.error(ExceptionUtils.getStackTrace(exception));
         }

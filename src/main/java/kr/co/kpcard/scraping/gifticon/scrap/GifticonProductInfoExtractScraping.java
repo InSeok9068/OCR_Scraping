@@ -1,6 +1,9 @@
 package kr.co.kpcard.scraping.gifticon.scrap;
 
+import kr.co.kpcard.scraping.common.constant.IssuerEnum;
+import kr.co.kpcard.scraping.common.domain.ScrapFailInfo;
 import kr.co.kpcard.scraping.common.domain.ScrapProductInfo;
+import kr.co.kpcard.scraping.common.repository.ScrapFailInfoRepository;
 import kr.co.kpcard.scraping.common.util.ScrapUtilService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +21,7 @@ import java.io.IOException;
 public class GifticonProductInfoExtractScraping {
 
     private final ScrapUtilService scrapUtilService;
+    private final ScrapFailInfoRepository scrapFailInfoRepository;
 
     public ScrapProductInfo scraping(WebDriver driver) throws IOException {
         String title = StringUtils.EMPTY;
@@ -28,9 +32,12 @@ public class GifticonProductInfoExtractScraping {
         String imageSrc = StringUtils.EMPTY;
         String fileName;
 
+        boolean isError = false;
+
         try {
             title = driver.findElement(By.className("pdt_name")).getText();
         } catch (Exception exception) {
+            isError = true;
             log.error(ExceptionUtils.getStackTrace(exception));
         }
 
@@ -38,18 +45,21 @@ public class GifticonProductInfoExtractScraping {
             brand = driver.findElement(By.className("shopna")).getText();
             brand = brand.substring(0, brand.indexOf("매장교환") - 1);
         } catch (Exception exception) {
+            isError = true;
             log.error(ExceptionUtils.getStackTrace(exception));
         }
 
         try {
             price = driver.findElement(By.className("cost")).getText();
         } catch (Exception exception) {
+            isError = true;
             log.error(ExceptionUtils.getStackTrace(exception));
         }
 
         try {
             couponType = (title.contains("원권")) ? "금액권" : "교환권";
         } catch (Exception exception) {
+            isError = true;
             log.error(ExceptionUtils.getStackTrace(exception));
         }
 
@@ -59,19 +69,27 @@ public class GifticonProductInfoExtractScraping {
                     .append(driver.findElement(By.id("con2")).getText())
                     .toString();
         } catch (Exception exception) {
+            isError = true;
             log.error(ExceptionUtils.getStackTrace(exception));
         }
 
         try {
             imageSrc = driver.findElement(By.xpath("/html/body/div[1]/div[2]/div[2]/div/div[2]/div[1]/div/span/img")).getAttribute("src");
         } catch (Exception exception) {
+            isError = true;
             log.error(ExceptionUtils.getStackTrace(exception));
         }
 
-        fileName = scrapUtilService.saveImage(imageSrc, "gifticon_");
+        if (isError) {
+            scrapFailInfoRepository.save(ScrapFailInfo.builder()
+                    .url(driver.getCurrentUrl())
+                    .build());
+        }
+
+        fileName = scrapUtilService.saveImage(imageSrc, IssuerEnum.GIFTICON.getIssuerCode() + "_");
 
         return ScrapProductInfo.builder()
-                .issuer("기프티콘")
+                .issuer(IssuerEnum.GIFTICON.getIssuerCode())
                 .title(title)
                 .brand(brand)
                 .subBrand(brand)

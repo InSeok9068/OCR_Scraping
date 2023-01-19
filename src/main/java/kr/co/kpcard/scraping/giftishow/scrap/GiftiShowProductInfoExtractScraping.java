@@ -1,6 +1,9 @@
 package kr.co.kpcard.scraping.giftishow.scrap;
 
+import kr.co.kpcard.scraping.common.constant.IssuerEnum;
+import kr.co.kpcard.scraping.common.domain.ScrapFailInfo;
 import kr.co.kpcard.scraping.common.domain.ScrapProductInfo;
+import kr.co.kpcard.scraping.common.repository.ScrapFailInfoRepository;
 import kr.co.kpcard.scraping.common.util.ScrapUtilService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +21,7 @@ import java.io.IOException;
 public class GiftiShowProductInfoExtractScraping {
 
     private final ScrapUtilService scrapUtilService;
+    private final ScrapFailInfoRepository scrapFailInfoRepository;
 
     public ScrapProductInfo scraping(WebDriver driver) throws IOException {
         String title = StringUtils.EMPTY;
@@ -28,9 +32,12 @@ public class GiftiShowProductInfoExtractScraping {
         String imageSrc = StringUtils.EMPTY;
         String fileName;
 
+        boolean isError = false;
+
         try {
             title = driver.findElement(By.className("itemNm")).getText();
         } catch (Exception exception) {
+            isError = true;
             log.error(ExceptionUtils.getStackTrace(exception));
         }
 
@@ -54,6 +61,7 @@ public class GiftiShowProductInfoExtractScraping {
                 }
                 brand = brand.substring(brand.indexOf(":") + 2);
             } catch (Exception exception1) {
+                isError = true;
                 log.error(ExceptionUtils.getStackTrace(exception));
             }
         }
@@ -61,25 +69,24 @@ public class GiftiShowProductInfoExtractScraping {
         try {
             price = driver.findElement(By.className("price")).getText();
         } catch (Exception exception) {
+            isError = true;
             log.error(ExceptionUtils.getStackTrace(exception));
         }
 
         try {
             couponType = (title.contains("원권")) ? "금액권" : "교환권";
         } catch (Exception exception) {
+            isError = true;
             log.error(ExceptionUtils.getStackTrace(exception));
         }
 
         try {
-            try {
-                StringBuilder sb = new StringBuilder();
-                content = sb.append(driver.findElement(By.className("txtCon")).getText())
-                        .append(driver.findElement(By.className("pnotandum")).getText())
-                        .toString();
-            } catch (Exception exception) {
-                log.error(ExceptionUtils.getStackTrace(exception));
-            }
+            StringBuilder sb = new StringBuilder();
+            content = sb.append(driver.findElement(By.className("txtCon")).getText())
+                    .append(driver.findElement(By.className("pnotandum")).getText())
+                    .toString();
         } catch (Exception exception) {
+            isError = true;
             log.error(ExceptionUtils.getStackTrace(exception));
         }
 
@@ -89,14 +96,21 @@ public class GiftiShowProductInfoExtractScraping {
             try {
                 imageSrc = driver.findElement(By.xpath("/html/body/div[4]/div/div[1]/div[1]/div/div[1]/img")).getAttribute("src");
             } catch (Exception exception1) {
+                isError = true;
                 log.error(ExceptionUtils.getStackTrace(exception));
             }
         }
 
-        fileName = scrapUtilService.saveImage(imageSrc, "giftiShow_");
+        if (isError) {
+            scrapFailInfoRepository.save(ScrapFailInfo.builder()
+                    .url(driver.getCurrentUrl())
+                    .build());
+        }
+
+        fileName = scrapUtilService.saveImage(imageSrc, IssuerEnum.GIFTISHOW.getIssuerCode() + "_");
 
         return ScrapProductInfo.builder()
-                .issuer("기프티쇼")
+                .issuer(IssuerEnum.GIFTISHOW.getIssuerCode())
                 .title(title)
                 .brand(brand)
                 .subBrand(brand)

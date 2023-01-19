@@ -1,6 +1,9 @@
 package kr.co.kpcard.scraping.kakao.scrap;
 
+import kr.co.kpcard.scraping.common.constant.IssuerEnum;
+import kr.co.kpcard.scraping.common.domain.ScrapFailInfo;
 import kr.co.kpcard.scraping.common.domain.ScrapProductInfo;
+import kr.co.kpcard.scraping.common.repository.ScrapFailInfoRepository;
 import kr.co.kpcard.scraping.common.util.ScrapUtilService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +21,7 @@ import java.io.IOException;
 public class KakaoProductInfoExtractScraping {
 
     private final ScrapUtilService scrapUtilService;
+    private final ScrapFailInfoRepository scrapFailInfoRepository;
 
     public ScrapProductInfo scraping(WebDriver driver) throws IOException {
         String title = StringUtils.EMPTY;
@@ -28,41 +32,60 @@ public class KakaoProductInfoExtractScraping {
         String imageSrc = StringUtils.EMPTY;
         String fileName;
 
+        boolean isError = false;
+
         try {
             title = driver.findElement(By.className("tit_subject")).getText();
+            title = title.trim();
         } catch (Exception exception) {
+            isError = true;
             log.error(ExceptionUtils.getStackTrace(exception));
         }
         try {
-            brand = driver.findElement(By.xpath("/html/body/app-root/app-view-wrapper/div/div/main/article/app-home/div/app-main/div/div/div[2]/div/div[4]/gl-link")).getAttribute("data-tiara-copy");
+            brand = driver.findElement(By.className("inner_shopname")).getText();
+            brand = StringUtils.replace(brand, "바로가기", StringUtils.EMPTY);
+            brand = brand.trim();
         } catch (Exception exception) {
+            isError = true;
             log.error(ExceptionUtils.getStackTrace(exception));
         }
         try {
             price = driver.findElement(By.className("txt_total")).getText();
+            price = StringUtils.replace(price, "원", StringUtils.EMPTY);
+            price = price.trim();
         } catch (Exception exception) {
+            isError = true;
             log.error(ExceptionUtils.getStackTrace(exception));
         }
         try {
             couponType = (title.contains("원권")) ? "금액권" : "교환권";
         } catch (Exception exception) {
+            isError = true;
             log.error(ExceptionUtils.getStackTrace(exception));
         }
         try {
             content = driver.findElement(By.className("desc_explain")).getText();
         } catch (Exception exception) {
+            isError = true;
             log.error(ExceptionUtils.getStackTrace(exception));
         }
         try {
             imageSrc = driver.findElement(By.xpath("/html/body/app-root/app-view-wrapper/div/div/main/article/app-home/div/app-main/div/div/div[1]/div/ngx-flicking/div/div/img")).getAttribute("src");
         } catch (Exception exception) {
+            isError = true;
             log.error(ExceptionUtils.getStackTrace(exception));
         }
 
-        fileName = scrapUtilService.saveImage(imageSrc, "kakao_");
+        if (isError) {
+            scrapFailInfoRepository.save(ScrapFailInfo.builder()
+                    .url(driver.getCurrentUrl())
+                    .build());
+        }
+
+        fileName = scrapUtilService.saveImage(imageSrc, IssuerEnum.KAKAO.getIssuerCode() + "_");
 
         return ScrapProductInfo.builder()
-                .issuer("카카오")
+                .issuer(IssuerEnum.KAKAO.getIssuerCode())
                 .title(title)
                 .brand(brand)
                 .subBrand(brand)

@@ -18,10 +18,10 @@ public class KakaoProductScraping {
     public List<KakaoProduct> scraping(WebDriver driver) throws InterruptedException {
         boolean isEvent = Boolean.TRUE;
 
-        int glProductGroupSize = driver.findElements(By.tagName("gl-product-group")).size();
+        int appProductGroupSize = driver.findElements(By.tagName("app-product-group")).size();
 
-        String eventXPath = "/html/body/app-root/app-view-wrapper/div/div/main/article/app-pw-detail/gl-promotion/div/gl-product-group[" + glProductGroupSize + "]/div/div/div/ul/li";
-        String xPath = "/html/body/app-root/app-view-wrapper/div/div/main/article/app-pw-detail/gl-promotion/div/gl-product-group/div/div/div/ul/li";
+        String eventXPath = "/html/body/app-root/app-view-wrapper/div/div/main/article/app-pw-detail/app-promotion/div/app-product-group[" + appProductGroupSize + "]/div/div/div/ul/li";
+        String xPath = "/html/body/app-root/app-view-wrapper/div/div/main/article/app-pw-detail/app-promotion/div/app-product-group/div/div/div/ul/li";
 
         int eventMinLiSize = driver.findElements(By.xpath(eventXPath)).size();
         int minLiSize = driver.findElements(By.xpath(xPath)).size();

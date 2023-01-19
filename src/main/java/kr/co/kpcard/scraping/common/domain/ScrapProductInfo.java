@@ -6,9 +6,10 @@ import javax.persistence.*;
 
 @Entity
 @Getter
-@Setter
+@Builder
 @ToString
 @NoArgsConstructor
+@AllArgsConstructor
 public class ScrapProductInfo {
 
     @Id
@@ -18,6 +19,7 @@ public class ScrapProductInfo {
     private String title;
     private String brand;
     private String subBrand;
+    @Setter
     private String category;
     private String couponType;
     private String price;
@@ -25,18 +27,4 @@ public class ScrapProductInfo {
     @Column
     private String content;
     private String image;
-
-    @Builder
-    public ScrapProductInfo(Long seqNo, String issuer, String title, String brand, String subBrand, String category, String couponType, String price, String content, String image) {
-        this.seqNo = seqNo;
-        this.issuer = issuer;
-        this.title = title;
-        this.brand = brand;
-        this.subBrand = subBrand;
-        this.category = category;
-        this.couponType = couponType;
-        this.price = price;
-        this.content = content;
-        this.image = image;
-    }
 }

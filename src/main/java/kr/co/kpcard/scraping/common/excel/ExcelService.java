@@ -16,7 +16,7 @@ import java.util.List;
 @Component
 public class ExcelService {
 
-    @Value("${savePath.excel}")
+    @Value("${save-path.excel}")
     private String excelSavePath;
 
     public void create(List<ScrapProductInfo> scrapProductInfoList, String fileName) throws IOException {

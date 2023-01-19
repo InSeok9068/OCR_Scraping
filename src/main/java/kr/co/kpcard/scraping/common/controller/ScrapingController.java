@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Api(tags = {"OCR 상품 정보 스크래핑"})
 @RestController
 @RequiredArgsConstructor
-public class CommonController {
+public class ScrapingController {
 
     private final KakaoService kakaoService;
     private final GifticonService gifticonService;

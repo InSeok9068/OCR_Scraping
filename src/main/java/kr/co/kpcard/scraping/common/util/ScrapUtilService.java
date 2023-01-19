@@ -21,7 +21,7 @@ import java.util.Date;
 @Component
 public class ScrapUtilService {
 
-    @Value("${savePath.image}")
+    @Value("${save-path.image}")
     private String imageSavePath;
 
     public static void openNewTab(WebDriver driver, String url) throws InterruptedException {
@@ -47,7 +47,6 @@ public class ScrapUtilService {
 
                 fileName = prefixFileName + getUniqueFileName() + "." + ext;
 
-//                String saveImagePath = imageSavePath + DateFormatUtils.format(new Date(), "yyyyMMdd") + '\\' + fileName;
                 String saveImagePath = imageSavePath + fileName;
 
                 ImageIO.write(img, ext, new File(saveImagePath));

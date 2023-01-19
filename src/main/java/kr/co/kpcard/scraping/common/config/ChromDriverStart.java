@@ -20,9 +20,12 @@ public class ChromDriverStart {
     @Value("${chrome.hide}")
     private boolean isHide;
 
+    @Value("${chromedriver-path}")
+    private String chromedriverPath;
+
     @Bean
     public WebDriver createWebDriver() {
-        final File driverFile = new File("C:\\chromedriver\\chromedriver.exe");
+        final File driverFile = new File(chromedriverPath);
 
         final ChromeDriverService chromeDriverService = new ChromeDriverService.Builder()
                 .usingDriverExecutable(driverFile)
