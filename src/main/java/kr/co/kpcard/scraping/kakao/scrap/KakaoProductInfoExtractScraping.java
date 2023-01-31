@@ -1,8 +1,9 @@
 package kr.co.kpcard.scraping.kakao.scrap;
 
+import kr.co.kpcard.scraping.common.constant.CouponTypeMappingEnum;
 import kr.co.kpcard.scraping.common.constant.IssuerEnum;
 import kr.co.kpcard.scraping.common.domain.ScrapFailInfo;
-import kr.co.kpcard.scraping.common.domain.ScrapProductInfo;
+import kr.co.kpcard.scraping.common.dto.ScrapProductInfoDto;
 import kr.co.kpcard.scraping.common.repository.ScrapFailInfoRepository;
 import kr.co.kpcard.scraping.common.util.ScrapUtilService;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +24,7 @@ public class KakaoProductInfoExtractScraping {
     private final ScrapUtilService scrapUtilService;
     private final ScrapFailInfoRepository scrapFailInfoRepository;
 
-    public ScrapProductInfo scraping(WebDriver driver) throws IOException {
+    public ScrapProductInfoDto scraping(WebDriver driver) throws IOException {
         String title = StringUtils.EMPTY;
         String brand = StringUtils.EMPTY;
         String price = StringUtils.EMPTY;
@@ -84,16 +85,16 @@ public class KakaoProductInfoExtractScraping {
 
         fileName = scrapUtilService.saveImage(imageSrc, IssuerEnum.KAKAO.getIssuerCode() + "_");
 
-        return ScrapProductInfo.builder()
-                .issuer(IssuerEnum.KAKAO.getIssuerCode())
-                .title(title)
-                .brand(brand)
-                .subBrand(brand)
-                .category(StringUtils.EMPTY)
-                .couponType(couponType)
-                .price(price)
-                .content(content)
-                .image(fileName)
-                .build();
+        ScrapProductInfoDto scrapProductInfoDto = new ScrapProductInfoDto();
+        scrapProductInfoDto.setSeqNo(ScrapUtilService.getSeqNo());
+        scrapProductInfoDto.setIssuer(IssuerEnum.KAKAO.getIssuerCode());
+        scrapProductInfoDto.setTitle(title);
+        scrapProductInfoDto.setBrand(brand);
+        scrapProductInfoDto.setCouponTypeEnum(CouponTypeMappingEnum.findByMappingCode(couponType).getCouponTypeEnum());
+        scrapProductInfoDto.setPrice(price);
+        scrapProductInfoDto.setContent(content);
+        scrapProductInfoDto.setImage(fileName);
+
+        return scrapProductInfoDto;
     }
 }

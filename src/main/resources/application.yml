@@ -25,7 +25,7 @@ spring:
       matching-strategy: ant_path_matcher
 
 browser:
-  hide: false
+  hide: true
 
 save-path:
   excel: C:\ocr\excel\

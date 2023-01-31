@@ -5,6 +5,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -20,6 +21,8 @@ import java.util.Date;
 @Slf4j
 @Component
 public class ScrapUtilService {
+
+    private static long seqNo = NumberUtils.LONG_ZERO;
 
     @Value("${save-path.image}")
     private String imageSavePath;
@@ -60,6 +63,19 @@ public class ScrapUtilService {
 
     private static String getUniqueFileName() {
         return DateFormatUtils.format(new Date(), "yyyyMMddHHmmss") + RandomStringUtils.randomNumeric(5);
+    }
+
+    public static String transferOnlyNumber(String price) {
+        return price.replaceAll("[^0-9]", "");
+    }
+
+    public static String transferOnlyText(String text) {
+        return text.replaceAll("[^가-힣A-Za-z0-9]", "");
+    }
+
+    public static long getSeqNo() {
+        seqNo += 1;
+        return seqNo;
     }
 
 }

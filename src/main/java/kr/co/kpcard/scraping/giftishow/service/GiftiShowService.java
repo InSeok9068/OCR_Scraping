@@ -1,7 +1,7 @@
 package kr.co.kpcard.scraping.giftishow.service;
 
 import kr.co.kpcard.scraping.common.constant.IssuerEnum;
-import kr.co.kpcard.scraping.common.domain.ScrapProductInfo;
+import kr.co.kpcard.scraping.common.dto.ScrapProductInfoDto;
 import kr.co.kpcard.scraping.common.excel.ExcelService;
 import kr.co.kpcard.scraping.common.repository.ScrapProductInfoRepository;
 import kr.co.kpcard.scraping.common.util.ScrapUtilService;
@@ -58,7 +58,7 @@ public class GiftiShowService {
 
             productUrlList.addAll(giftiShowProductScraping.scraping(driver));
 
-            List<ScrapProductInfo> scrapProductInfoList = new ArrayList<>();
+            List<ScrapProductInfoDto> scrapProductInfoDtoList = new ArrayList<>();
 
             for (String productUrl : productUrlList) {
 //            for (String productUrl : productUrlList.subList(0, 1)) {
@@ -67,7 +67,7 @@ public class GiftiShowService {
                 String tab2 = new ArrayList<>(driver.getWindowHandles()).get(NumberUtils.INTEGER_ONE);
                 driver.switchTo().window(tab2).navigate();
 
-                scrapProductInfoList.add(giftiShowProductInfoExtractScraping.scraping(driver));
+                scrapProductInfoDtoList.add(giftiShowProductInfoExtractScraping.scraping(driver));
 
                 driver.close();
                 driver.switchTo().window(tab1).navigate();
@@ -75,7 +75,7 @@ public class GiftiShowService {
 
 //            scrapProductInfoRepository.saveAll(scrapProductInfoList);
 
-            excelService.create(scrapProductInfoList, IssuerEnum.GIFTISHOW.getIssuerDesc());
+            excelService.create(scrapProductInfoDtoList, IssuerEnum.GIFTISHOW.getIssuerDesc());
         } catch (Exception exception) {
             log.error(ExceptionUtils.getStackTrace(exception));
         }

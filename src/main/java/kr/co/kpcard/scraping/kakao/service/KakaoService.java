@@ -1,7 +1,8 @@
 package kr.co.kpcard.scraping.kakao.service;
 
 import kr.co.kpcard.scraping.common.constant.IssuerEnum;
-import kr.co.kpcard.scraping.common.domain.ScrapProductInfo;
+import kr.co.kpcard.scraping.common.constant.MarketCategoryMappingEnum;
+import kr.co.kpcard.scraping.common.dto.ScrapProductInfoDto;
 import kr.co.kpcard.scraping.common.excel.ExcelService;
 import kr.co.kpcard.scraping.common.repository.ScrapProductInfoRepository;
 import kr.co.kpcard.scraping.common.util.ScrapUtilService;
@@ -84,7 +85,7 @@ public class KakaoService {
                 driver.switchTo().window(tab1).navigate();
             }
 
-            List<ScrapProductInfo> scrapProductInfoList = new ArrayList<>();
+            List<ScrapProductInfoDto> scrapProductInfoDtoList = new ArrayList<>();
 
             for (KakaoProduct kakaoProduct : kakaoProductList) {
 //            for (KakaoProduct kakaoProduct : kakaoProductList.subList(0, 1)) {
@@ -93,17 +94,17 @@ public class KakaoService {
                 String tab2 = new ArrayList<>(driver.getWindowHandles()).get(NumberUtils.INTEGER_ONE);
                 driver.switchTo().window(tab2).navigate();
 
-                ScrapProductInfo scrapProductInfo = kakaoProductInfoExtractScraping.scraping(driver);
-                scrapProductInfo.setCategory(kakaoProduct.getCategoryName());
+                ScrapProductInfoDto scrapProductInfoDto = kakaoProductInfoExtractScraping.scraping(driver);
+                scrapProductInfoDto.setMarketCategoryEnum(MarketCategoryMappingEnum.findByMappingCode(kakaoProduct.getCategoryName()).getMarketCategoryEnum());
 
-                scrapProductInfoList.add(scrapProductInfo);
+                scrapProductInfoDtoList.add(scrapProductInfoDto);
                 driver.close();
                 driver.switchTo().window(tab1).navigate();
             }
 
 //            scrapProductInfoRepository.saveAll(scrapProductInfoList);
 
-            excelService.create(scrapProductInfoList, IssuerEnum.KAKAO.getIssuerDesc());
+            excelService.create(scrapProductInfoDtoList, IssuerEnum.KAKAO.getIssuerDesc());
         } catch (Exception exception) {
             log.error(ExceptionUtils.getStackTrace(exception));
         }

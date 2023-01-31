@@ -22,11 +22,11 @@ public class ScrapProductInfo {
     private String issuer;
     private String title;
     private String brand;
-    private String subBrand;
-    @Setter
-    private String category;
-    private String couponType;
-    private String price;
+    private String searchTitle;
+    private String searchBrand;
+    private String categoryCode;
+    private String couponTypeCode;
+    private int price;
     @Lob
     @Column
     private String content;
