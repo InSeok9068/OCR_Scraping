@@ -54,7 +54,7 @@ public class ExcelService {
             row.createCell(cellIndex++).setCellValue(scrapProductInfoDto.getCouponTypeDesc());
             row.createCell(cellIndex++).setCellValue(scrapProductInfoDto.getPrice());
             row.createCell(cellIndex++).setCellValue(scrapProductInfoDto.getContent());
-            row.createCell(cellIndex).setCellValue(scrapProductInfoDto.getImage());
+            row.createCell(cellIndex).setCellValue(scrapProductInfoDto.getImageUrl());
         }
 
         FileOutputStream fos = new FileOutputStream(excelSavePath + fileName + ".xlsx");

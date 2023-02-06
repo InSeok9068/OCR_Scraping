@@ -3,7 +3,6 @@ package kr.co.kpcard.scraping.gifticon.scrap;
 import kr.co.kpcard.scraping.common.constant.CouponTypeMappingEnum;
 import kr.co.kpcard.scraping.common.constant.IssuerEnum;
 import kr.co.kpcard.scraping.common.domain.ScrapFailInfo;
-import kr.co.kpcard.scraping.common.domain.ScrapProductInfo;
 import kr.co.kpcard.scraping.common.dto.ScrapProductInfoDto;
 import kr.co.kpcard.scraping.common.repository.ScrapFailInfoRepository;
 import kr.co.kpcard.scraping.common.util.ScrapUtilService;
@@ -88,7 +87,7 @@ public class GifticonProductInfoExtractScraping {
                     .build());
         }
 
-        fileName = scrapUtilService.saveImage(imageSrc, IssuerEnum.GIFTICON.getIssuerCode() + "_");
+//        fileName = scrapUtilService.saveImage(imageSrc, IssuerEnum.GIFTICON.getIssuerCode() + "_");
 
         ScrapProductInfoDto scrapProductInfoDto = new ScrapProductInfoDto();
         scrapProductInfoDto.setSeqNo(ScrapUtilService.getSeqNo());
@@ -98,7 +97,7 @@ public class GifticonProductInfoExtractScraping {
         scrapProductInfoDto.setCouponTypeEnum(CouponTypeMappingEnum.findByMappingCode(couponType).getCouponTypeEnum());
         scrapProductInfoDto.setPrice(price);
         scrapProductInfoDto.setContent(content);
-        scrapProductInfoDto.setImage(fileName);
+        scrapProductInfoDto.setImageUrl(imageSrc);
 
         return scrapProductInfoDto;
     }

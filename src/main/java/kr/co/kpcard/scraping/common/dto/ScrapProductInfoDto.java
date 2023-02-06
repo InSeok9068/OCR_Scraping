@@ -20,7 +20,7 @@ public class ScrapProductInfoDto {
     private String couponTypeDesc;
     private int price;
     private String content;
-    private String image;
+    private String imageUrl;
 
     public void setTitle(String title) {
         this.title = title;
@@ -33,7 +33,7 @@ public class ScrapProductInfoDto {
     }
 
     public void setPrice(String price) {
-        this.price = Integer.parseInt(StringUtils.defaultString(ScrapUtilService.transferOnlyNumber(price), "0"));
+        this.price = Integer.parseInt(StringUtils.defaultIfBlank(ScrapUtilService.transferOnlyNumber(price), "0"));
     }
 
     public void setMarketCategoryEnum(MarketCategoryEnum marketCategoryEnum) {

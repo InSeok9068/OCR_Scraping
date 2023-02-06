@@ -30,7 +30,7 @@ public class ScrapProductInfo {
     @Lob
     @Column
     private String content;
-    private String image;
+    private String imageUrl;
 
     @CreatedDate
     private LocalDateTime createdDate;

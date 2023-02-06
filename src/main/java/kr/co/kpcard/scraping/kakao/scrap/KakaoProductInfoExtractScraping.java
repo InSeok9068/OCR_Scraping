@@ -83,7 +83,7 @@ public class KakaoProductInfoExtractScraping {
                     .build());
         }
 
-        fileName = scrapUtilService.saveImage(imageSrc, IssuerEnum.KAKAO.getIssuerCode() + "_");
+//        fileName = scrapUtilService.saveImage(imageSrc, IssuerEnum.KAKAO.getIssuerCode() + "_");
 
         ScrapProductInfoDto scrapProductInfoDto = new ScrapProductInfoDto();
         scrapProductInfoDto.setSeqNo(ScrapUtilService.getSeqNo());
@@ -93,7 +93,7 @@ public class KakaoProductInfoExtractScraping {
         scrapProductInfoDto.setCouponTypeEnum(CouponTypeMappingEnum.findByMappingCode(couponType).getCouponTypeEnum());
         scrapProductInfoDto.setPrice(price);
         scrapProductInfoDto.setContent(content);
-        scrapProductInfoDto.setImage(fileName);
+        scrapProductInfoDto.setImageUrl(imageSrc);
 
         return scrapProductInfoDto;
     }
